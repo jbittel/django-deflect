@@ -25,16 +25,16 @@ def redirect(request, url_path):
         logger.warning("Error decoding redirect: %s" % e)
         raise Http404
 
+    redirect = get_object_or_404(RedirectURL, pk=id)
     RedirectURL.objects.filter(pk=id).update(hits=F('hits') + 1,
                                              last_used=now())
-    redirect = get_object_or_404(RedirectURL, pk=id)
 
     # Inject Google campaign parameters; if any of these
     # are not set, they will be ignored
-    params = {'utm_source': redirect.short_url,
-              'utm_campaign': redirect.campaign,
-              'utm_content': redirect.content,
-              'utm_medium': redirect.medium}
-    url = add_query_params(redirect.url, params)
+    utm_params = {'utm_source': redirect.short_url,
+                  'utm_campaign': redirect.campaign,
+                  'utm_content': redirect.content,
+                  'utm_medium': redirect.medium}
+    url = add_query_params(redirect.url, utm_params)
 
     return HttpResponsePermanentRedirect(url)
