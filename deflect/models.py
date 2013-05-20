@@ -16,13 +16,17 @@ except ImportError:  # Django version < 1.5
 class RedirectURL(models.Model):
     """
     """
-    campaign = models.CharField(_('campaign'), max_length=64, blank=True)
-    hits = models.IntegerField(default=0, editable=False)
-    content = models.CharField(_('content'), max_length=64, blank=True)
+    campaign = models.CharField(_('campaign'), max_length=64, blank=True,
+                                help_text=_('The individual campaign name, slogan, promo code, etc. for a product.'))
+    content = models.CharField(_('content'), max_length=64, blank=True,
+                               help_text=_('Used to differentiate similar content, or links within the same ad.'))
     created = models.DateTimeField(_('created'), auto_now_add=True, editable=False)
+    description = models.TextField(_('description'), blank=True)
+    hits = models.IntegerField(default=0, editable=False)
     last_used = models.DateTimeField(_('last used'), editable=False, blank=True, null=True)
-    medium = models.CharField(_('medium'), max_length=64, blank=True)
-    url = models.URLField()
+    medium = models.CharField(_('medium'), max_length=64, blank=True,
+                              help_text=_('The advertising or marketing medium, e.g.: cpc, banner, email newsletter.'))
+    url = models.URLField(_('target url'), help_text=_('The full destination URL redirected to from the short URL.'))
     user = models.ForeignKey(User, verbose_name=_('user'), editable=False)
 
     def __str__(self):
