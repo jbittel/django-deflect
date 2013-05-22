@@ -18,11 +18,14 @@ logger = logging.getLogger(__name__)
 
 def redirect(request, url_path):
     """
+    Given the path component of a short URL, update the URL's
+    statistics and redirect the user to the full destination
+    URL, including available Google Analytics parameters.
     """
     try:
         id = base32_crockford.decode(url_path)
     except ValueError as e:
-        logger.warning("Error decoding redirect: %s" % e)
+        logger.warning("Error decoding redirect '%s': %s" % (url_path, e))
         raise Http404
 
     redirect = get_object_or_404(RedirectURL, pk=id)
