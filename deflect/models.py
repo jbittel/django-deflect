@@ -15,6 +15,12 @@ except ImportError:  # Django version < 1.5
 @python_2_unicode_compatible
 class RedirectURL(models.Model):
     """
+    A ``RedirectURL`` represents a redirection mapping between a short
+    URL and the full destination URL. Several additional values are
+    stored with related data and usage statistics.
+
+    The short URL itself is not stored, but can be generated on demand
+    using the ``short_url`` property.
     """
     campaign = models.CharField(_('campaign'), max_length=64, blank=True,
                                 help_text=_('The individual campaign name, slogan, promo code, etc. for a product.'))
@@ -28,6 +34,10 @@ class RedirectURL(models.Model):
                               help_text=_('The advertising or marketing medium, e.g.: cpc, banner, email newsletter.'))
     url = models.URLField(_('target url'), help_text=_('The full destination URL redirected to from the short URL.'))
     user = models.ForeignKey(User, verbose_name=_('user'), editable=False)
+
+    class Meta:
+        verbose_name = _('Redirect URL')
+        verbose_name_plural = _('Redirect URLs')
 
     def __str__(self):
         return self.url
