@@ -34,7 +34,7 @@ def redirect(request, url_path):
 
     # Inject Google campaign parameters; if any of these
     # are not set, they will be ignored
-    utm_params = {'utm_source': redirect.short_url,
+    utm_params = {'utm_source': redirect.url_path,
                   'utm_campaign': redirect.campaign,
                   'utm_content': redirect.content,
                   'utm_medium': redirect.medium}

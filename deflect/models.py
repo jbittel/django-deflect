@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 import base32_crockford
 
+from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -43,9 +45,16 @@ class RedirectURL(models.Model):
         return self.url
 
     @property
+    def url_path(self):
+        return base32_crockford.encode(self.pk)
+
+    def get_absolute_url(self):
+        return reverse('deflect.views.redirect', args=[self.url_path])
+
+    @property
     def short_url(self):
         """
-        Return the encoded representation of the current model's
-        primary key field.
+        Return the complete short URL for the current redirect.
         """
-        return base32_crockford.encode(self.pk)
+        url_base = 'http://%s' % Site.objects.get_current().domain
+        return url_base + self.get_absolute_url()
