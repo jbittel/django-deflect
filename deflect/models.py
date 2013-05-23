@@ -1,6 +1,11 @@
 from __future__ import unicode_literals
 
+import base64
+from cStringIO import StringIO
+
 import base32_crockford
+
+import qrcode
 
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
@@ -58,3 +63,16 @@ class RedirectURL(models.Model):
         """
         url_base = 'http://%s' % Site.objects.get_current().domain
         return url_base + self.get_absolute_url()
+
+    def qr_code(self):
+        """
+        Return an HTML img tag containing an inline base64 encoded
+        representation of the short URL as a QR code.
+        """
+        png_stream = StringIO()
+        img = qrcode.make(self.short_url)
+        img.save(png_stream)
+        png_base64 = base64.b64encode(png_stream.getvalue())
+        png_stream.close()
+        return '<img src="data:image/png;base64,%s" />' % png_base64
+    qr_code.allow_tags = True
