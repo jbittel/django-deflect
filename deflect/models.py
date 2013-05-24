@@ -56,7 +56,6 @@ class RedirectURL(models.Model):
     def get_absolute_url(self):
         return reverse('deflect.views.redirect', args=[self.url_path])
 
-    @property
     def short_url(self):
         """
         Return the complete short URL for the current redirect.
@@ -70,7 +69,7 @@ class RedirectURL(models.Model):
         representation of the short URL as a QR code.
         """
         png_stream = StringIO()
-        img = qrcode.make(self.short_url)
+        img = qrcode.make(self.short_url())
         img.save(png_stream)
         png_base64 = base64.b64encode(png_stream.getvalue())
         png_stream.close()
