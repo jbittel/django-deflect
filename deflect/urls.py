@@ -3,5 +3,5 @@ from django.conf.urls import url
 
 
 urlpatterns = patterns('',
-    url(r'^(\w+)/?$', 'deflect.views.redirect', name='redirect'),
+    url(r'^(?P<slug>\w+)/?$', 'deflect.views.redirect', name='redirect'),
 )

@@ -16,16 +16,16 @@ from .utils import add_query_params
 logger = logging.getLogger(__name__)
 
 
-def redirect(request, url_path):
+def redirect(request, slug):
     """
-    Given the path component of a short URL, update the URL's
-    statistics and redirect the user to the full destination
-    URL, including available Google Analytics parameters.
+    Given the short URL slug, update the statistics and redirect the
+    user to the destination URL, including available Google Analytics
+    parameters.
     """
     try:
-        id = base32_crockford.decode(url_path)
+        id = base32_crockford.decode(slug)
     except ValueError as e:
-        logger.warning("Error decoding redirect '%s': %s" % (url_path, e))
+        logger.warning("Error decoding redirect '%s': %s" % (slug, e))
         raise Http404
 
     redirect = get_object_or_404(RedirectURL, pk=id)
@@ -34,7 +34,7 @@ def redirect(request, url_path):
 
     # Inject Google campaign parameters; if any of these
     # are not set, they will be ignored
-    utm_params = {'utm_source': redirect.url_path,
+    utm_params = {'utm_source': redirect.slug,
                   'utm_campaign': redirect.campaign,
                   'utm_content': redirect.content,
                   'utm_medium': redirect.medium}

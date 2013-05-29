@@ -25,9 +25,6 @@ class RedirectURL(models.Model):
     A ``RedirectURL`` represents a redirection mapping between a short
     URL and the full destination URL. Several additional values are
     stored with related data and usage statistics.
-
-    The short URL itself is not stored, but can be generated on demand
-    using the ``short_url`` property.
     """
     campaign = models.CharField(_('campaign'), max_length=64, blank=True,
                                 help_text=_('The individual campaign name, slogan, promo code, etc. for a product.'))
@@ -50,11 +47,11 @@ class RedirectURL(models.Model):
         return self.url
 
     @property
-    def url_path(self):
+    def slug(self):
         return base32_crockford.encode(self.pk)
 
     def get_absolute_url(self):
-        return reverse('deflect.views.redirect', args=[self.url_path])
+        return reverse('deflect.views.redirect', args=[self.slug])
 
     def short_url(self):
         """
