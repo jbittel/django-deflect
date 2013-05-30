@@ -18,7 +18,7 @@ packages = [
 ]
 
 package_data = {
-    '': ['LICENSE'],
+    '': ['LICENSE', 'README.rst'],
 }
 
 setup(
