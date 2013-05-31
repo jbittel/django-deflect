@@ -32,12 +32,12 @@ class RedirectURLTests(unittest.TestCase):
         RedirectURL.objects.all().delete()
         User.objects.all().delete()
 
-    def test_url_path(self):
+    def test_slug(self):
         """
-        The URL path should be equal to just the model's calculated
-        short URL value.
+        The slug should be equal to just the model's calculated short
+        URL value.
         """
-        self.assertEqual(self.url.url_path, '1')
+        self.assertEqual(self.url.slug, '1')
 
     def test_absolute_url(self):
         """
