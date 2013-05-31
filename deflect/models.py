@@ -51,7 +51,7 @@ class RedirectURL(models.Model):
         return base32_crockford.encode(self.pk)
 
     def get_absolute_url(self):
-        return reverse('deflect.views.redirect', args=[self.slug])
+        return reverse('deflect-redirect', args=[self.slug])
 
     def short_url(self):
         """
