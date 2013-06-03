@@ -27,17 +27,17 @@ class RedirectURL(models.Model):
     stored with related data and usage statistics.
     """
     campaign = models.CharField(_('campaign'), max_length=64, blank=True,
-                                help_text=_('The individual campaign name, slogan, promo code, etc. for a product.'))
+                                help_text=_('The individual campaign name, slogan, promo code, etc. for a product'))
     content = models.CharField(_('content'), max_length=64, blank=True,
-                               help_text=_('Used to differentiate similar content, or links within the same ad.'))
+                               help_text=_('Used to differentiate similar content, or links within the same ad'))
     created = models.DateTimeField(_('created'), auto_now_add=True, editable=False)
+    creator = models.ForeignKey(User, verbose_name=_('creator'), editable=False)
     description = models.TextField(_('description'), blank=True)
-    hits = models.IntegerField(default=0, editable=False)
+    hits = models.IntegerField(_('hits'), default=0, editable=False)
     last_used = models.DateTimeField(_('last used'), editable=False, blank=True, null=True)
     medium = models.CharField(_('medium'), max_length=64, blank=True,
-                              help_text=_('The advertising or marketing medium, e.g.: cpc, banner, email newsletter.'))
-    url = models.URLField(_('target url'), help_text=_('The full destination URL redirected to from the short URL.'))
-    user = models.ForeignKey(User, verbose_name=_('user'), editable=False)
+                              help_text=_('The advertising or marketing medium, e.g.: postcard, banner, email newsletter'))
+    url = models.URLField(_('target url'), help_text=_('The target URL to be redirected'))
 
     class Meta:
         verbose_name = _('Redirect URL')
