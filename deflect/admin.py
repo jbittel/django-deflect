@@ -16,7 +16,8 @@ class RedirectURLAdmin(admin.ModelAdmin):
                  ('Short URL Usage', {'fields': ('hits', 'created', 'last_used',)}),)
 
     def save_model(self, request, obj, form, change):
-        obj.user = request.user
+        if not change:
+            obj.creator = request.user
         obj.save()
 
 
