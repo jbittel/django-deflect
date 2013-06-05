@@ -1,17 +1,17 @@
 from __future__ import unicode_literals
 
-import unittest
-
+from django.test import TestCase
+from django.utils import unittest
 try:
     from django.contrib.auth import get_user_model
     User = get_user_model()
 except ImportError:  # Django version < 1.5
     from django.contrib.auth.models import User
 
-from .models import RedirectURL
+from ..models import RedirectURL
 
 
-class RedirectURLTests(unittest.TestCase):
+class RedirectURLTests(TestCase):
     """
     Tests for the RedirectURL model methods.
     """
@@ -23,7 +23,7 @@ class RedirectURLTests(unittest.TestCase):
         self.user = User.objects.create_user('testing')
         self.url = RedirectURL.objects.create(id=1,
                                               url='http://www.example.com',
-                                              user=self.user)
+                                              creator=self.user)
 
     def tearDown(self):
         """
