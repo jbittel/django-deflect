@@ -15,6 +15,7 @@ def read_file(filename):
 
 packages = [
     'deflect',
+    'deflect.tests',
 ]
 
 package_data = {
