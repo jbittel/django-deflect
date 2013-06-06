@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from django.test import TestCase
+from django.test import TransactionTestCase
 from django.utils import unittest
 try:
     from django.contrib.auth import get_user_model
@@ -11,26 +11,19 @@ except ImportError:  # Django version < 1.5
 from ..models import RedirectURL
 
 
-class RedirectURLTests(TestCase):
+class RedirectURLTests(TransactionTestCase):
     """
     Tests for the RedirectURL model methods.
     """
+    reset_sequences = True
 
     def setUp(self):
         """
         Create a user and model instance to test against.
         """
         self.user = User.objects.create_user('testing')
-        self.url = RedirectURL.objects.create(id=1,
-                                              url='http://www.example.com',
+        self.url = RedirectURL.objects.create(url='http://www.example.com',
                                               creator=self.user)
-
-    def tearDown(self):
-        """
-        Remove all user and model instances.
-        """
-        RedirectURL.objects.all().delete()
-        User.objects.all().delete()
 
     def test_slug(self):
         """
