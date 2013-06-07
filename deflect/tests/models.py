@@ -27,12 +27,12 @@ class RedirectURLTests(TestCase):
                                             creator=self.user)
         self.key = base32_crockford.encode(self.r.pk)
 
-    def test_slug(self):
+    def test_key(self):
         """
-        The slug should be equal to just the model's calculated short
+        The key should be equal to just the model's calculated short
         URL value.
         """
-        self.assertEqual(self.r.slug, self.key)
+        self.assertEqual(self.r.key, self.key)
 
     def test_absolute_url(self):
         """

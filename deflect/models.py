@@ -47,11 +47,11 @@ class RedirectURL(models.Model):
         return self.url
 
     @property
-    def slug(self):
+    def key(self):
         return base32_crockford.encode(self.pk)
 
     def get_absolute_url(self):
-        return reverse('deflect-redirect', args=[self.slug])
+        return reverse('deflect-redirect', args=[self.key])
 
     def short_url(self):
         """

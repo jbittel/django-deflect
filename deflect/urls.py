@@ -5,5 +5,5 @@ from .views import redirect
 
 
 urlpatterns = patterns('',
-    url(r'^(?P<slug>[a-zA-Z0-9]+)$', redirect, name='deflect-redirect'),
+    url(r'^(?P<key>[a-zA-Z0-9]+)$', redirect, name='deflect-redirect'),
 )
