@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
-from django.test import TransactionTestCase
+from django.test import TestCase
 from django.utils import unittest
 try:
     from django.contrib.auth import get_user_model
@@ -9,14 +9,15 @@ try:
 except ImportError:  # Django version < 1.5
     from django.contrib.auth.models import User
 
+import base32_crockford
+
 from ..models import RedirectURL
 
 
-class RedirectViewTests(TransactionTestCase):
+class RedirectViewTests(TestCase):
     """
     Tests for the redirect view.
     """
-    reset_sequences = True
 
     def assertInHeader(self, response, text, header):
         self.assertIn(text, response._headers[header][1])
@@ -30,20 +31,21 @@ class RedirectViewTests(TransactionTestCase):
         Create a user and model instance to test against.
         """
         self.user = User.objects.create_user('testing')
-        RedirectURL.objects.create(url='http://www.example.com',
-                                   creator=self.user,
-                                   campaign='example',
-                                   medium='email',
-                                   content='test')
+        self.r = RedirectURL.objects.create(url='http://www.example.com',
+                                            creator=self.user,
+                                            campaign='example',
+                                            medium='email',
+                                            content='test')
+        self.key = base32_crockford.encode(self.r.pk)
 
     def test_redirect(self):
         """
         A valid key should return a permanent redirect to the target
         URL with all parameters included.
         """
-        response = self.client.get(reverse('deflect-redirect', args=[1]))
+        response = self.client.get(reverse('deflect-redirect', args=[self.key]))
         self.assertRedirectsNoFollow(response, 'http://www.example.com')
-        self.assertInHeader(response, 'utm_source=1', 'location')
+        self.assertInHeader(response, 'utm_source=' + self.key, 'location')
         self.assertInHeader(response, 'utm_campaign=example', 'location')
         self.assertInHeader(response, 'utm_medium=email', 'location')
         self.assertInHeader(response, 'utm_content=test', 'location')
