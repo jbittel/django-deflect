@@ -11,6 +11,7 @@ from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 try:
     from django.contrib.auth import get_user_model
@@ -30,7 +31,7 @@ class RedirectURL(models.Model):
                                 help_text=_('The individual campaign name, slogan, promo code, etc. for a product'))
     content = models.CharField(_('content'), max_length=64, blank=True,
                                help_text=_('Used to differentiate similar content, or links within the same ad'))
-    created = models.DateTimeField(_('created'), auto_now_add=True, editable=False)
+    created = models.DateTimeField(_('created'), editable=False)
     creator = models.ForeignKey(User, verbose_name=_('creator'), editable=False)
     description = models.TextField(_('description'), blank=True)
     hits = models.IntegerField(_('hits'), default=0, editable=False)
@@ -46,12 +47,17 @@ class RedirectURL(models.Model):
     def __str__(self):
         return self.url
 
-    @property
-    def key(self):
-        return base32_crockford.encode(self.pk)
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.created = now()
+        super(RedirectURL, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('deflect-redirect', args=[self.key])
+
+    @property
+    def key(self):
+        return base32_crockford.encode(self.pk)
 
     def short_url(self):
         """
