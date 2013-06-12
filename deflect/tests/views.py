@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from django.utils import unittest
 try:
     from django.contrib.auth import get_user_model
     User = get_user_model()
