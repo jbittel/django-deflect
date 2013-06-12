@@ -13,7 +13,8 @@ class RedirectURLAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('url', 'short_url',)}),
                  ('Google', {'fields': ('campaign', 'medium', 'content',)}),
                  ('Additional info', {'fields': ('description', 'qr_code',)}),
-                 ('Short URL Usage', {'fields': ('hits', 'created', 'last_used',)}),)
+                 ('Short URL Usage', {'classes': ('collapse grp-collapse grp-closed',),
+                                      'fields': ('hits', 'created', 'last_used',)}),)
 
     def save_model(self, request, obj, form, change):
         if not change:
