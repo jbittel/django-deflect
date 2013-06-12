@@ -12,11 +12,15 @@ class RedirectURLAdmin(admin.ModelAdmin):
 
     fieldsets = ((None, {'fields': ('url', 'short_url',)}),
                  ('Google', {'fields': ('campaign', 'medium', 'content',)}),
-                 ('Additional info', {'fields': ('description', 'qr_code',)}),
+                 ('Additional Info', {'fields': ('description', 'qr_code',)}),
                  ('Short URL Usage', {'classes': ('collapse grp-collapse grp-closed',),
                                       'fields': ('hits', 'created', 'last_used',)}),)
 
     def save_model(self, request, obj, form, change):
+        """
+        On first save, set the ``RedirectURL`` creator to the current
+        user. On subsequent saves, skip this step.
+        """
         if not change:
             obj.creator = request.user
         obj.save()
