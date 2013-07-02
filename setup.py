@@ -48,4 +48,5 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     keywords=['django', 'url', 'short url', 'redirect', 'redirection'],
+    install_requires=['base32-crockford == 0.1.0'],
 )
