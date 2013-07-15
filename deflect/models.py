@@ -45,7 +45,7 @@ class RedirectURL(models.Model):
         verbose_name_plural = _('Redirect URLs')
 
     def __str__(self):
-        return self.url
+        return self.key
 
     def save(self, *args, **kwargs):
         if not self.id:
