@@ -19,9 +19,18 @@ class RedirectViewTests(TestCase):
     """
 
     def assertInHeader(self, response, text, header):
+        """
+        Check that given text is contained within a specified
+        response header field.
+        """
         self.assertIn(text, response._headers[header][1])
 
     def assertRedirectsNoFollow(self, response, expected_url, status_code=301):
+        """
+        Check that a given response contains a Location header
+        redirect to the expected URL. Differs from assertRedirects
+        in that it does not attempt to follow the redirect URL.
+        """
         self.assertInHeader(response, expected_url, 'location')
         self.assertEqual(response.status_code, status_code)
 
