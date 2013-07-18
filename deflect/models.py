@@ -4,9 +4,9 @@ import base64
 from cStringIO import StringIO
 
 import base32_crockford
-
 import qrcode
 
+from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -79,3 +79,21 @@ class RedirectURL(models.Model):
         png_stream.close()
         return '<img src="data:image/png;base64,%s" />' % png_base64
     qr_code.allow_tags = True
+
+
+@python_2_unicode_compatible
+class CustomURL(models.Model):
+    """
+    A ``CustomURL`` is an optional alias for a ``RedirectURL`` that
+    can be used in place of the generated key. It is prepended with
+    a configured prefix to differentiate an alias from a generated
+    key.
+    """
+    alias_prefix = getattr(settings, 'DEFLECT_ALIAS_PREFIX', '')
+
+    redirect = models.OneToOneField(RedirectURL)
+    alias = models.CharField(_('alias'), max_length=8, blank=True,
+                             help_text=_('An alias for the generated short URL; will be prefixed with "%s"' % alias_prefix))
+
+    def __str__(self):
+        return alias_prefix + self.alias

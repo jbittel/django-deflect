@@ -1,8 +1,10 @@
 from django import forms
+from django.conf import settings
 from django.contrib import admin
 
 import requests
 
+from .models import CustomURL
 from .models import RedirectURL
 
 
@@ -27,13 +29,22 @@ class RedirectURLAdminForm(forms.ModelForm):
         return url
 
 
+class CustomURLInline(admin.StackedInline):
+    model = CustomURL
+
+
 class RedirectURLAdmin(admin.ModelAdmin):
     form = RedirectURLAdminForm
     list_display = ('long_url', 'short_url', 'hits', 'last_used', 'creator', 'campaign', 'medium',)
     list_filter = ('creator__username', 'campaign', 'medium',)
     ordering = ('-last_used',)
     readonly_fields = ('created', 'short_url', 'qr_code', 'hits', 'last_used',)
-    search_fields = ['long_url', 'campaign']
+    search_fields = ['long_url', 'campaign',]
+
+    # Only display the custom alias field if a prefix has been configured
+    alias_prefix = getattr(settings, 'DEFLECT_ALIAS_PREFIX', '')
+    if alias_prefix:
+        inlines = [CustomURLInline,]
 
     fieldsets = ((None, {'fields': ('long_url', 'short_url',)}),
                  ('Google', {'fields': ('campaign', 'medium', 'content',)}),
