@@ -4,13 +4,13 @@ from .models import RedirectURL
 
 
 class RedirectURLAdmin(admin.ModelAdmin):
-    list_display = ('url', 'short_url', 'hits', 'last_used', 'creator', 'campaign', 'medium',)
+    list_display = ('long_url', 'short_url', 'hits', 'last_used', 'creator', 'campaign', 'medium',)
     list_filter = ('creator__username', 'campaign', 'medium',)
     ordering = ('-last_used',)
     readonly_fields = ('created', 'short_url', 'qr_code', 'hits', 'last_used',)
-    search_fields = ['url', 'campaign']
+    search_fields = ['long_url', 'campaign']
 
-    fieldsets = ((None, {'fields': ('url', 'short_url',)}),
+    fieldsets = ((None, {'fields': ('long_url', 'short_url',)}),
                  ('Google', {'fields': ('campaign', 'medium', 'content',)}),
                  ('Additional Info', {'fields': ('description', 'qr_code',)}),
                  ('Short URL Usage', {'classes': ('collapse grp-collapse grp-closed',),

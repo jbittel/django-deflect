@@ -36,9 +36,10 @@ class RedirectURL(models.Model):
     description = models.TextField(_('description'), blank=True)
     hits = models.IntegerField(_('hits'), default=0, editable=False)
     last_used = models.DateTimeField(_('last used'), editable=False, blank=True, null=True)
+    long_url = models.URLField(_('long url'),
+                               help_text=_('The target URL to which the short URL redirects'))
     medium = models.CharField(_('medium'), max_length=64, blank=True,
                               help_text=_('The advertising or marketing medium, e.g.: postcard, banner, email newsletter'))
-    url = models.URLField(_('target url'), help_text=_('The target URL to which the short URL redirects'))
 
     class Meta:
         verbose_name = _('Redirect URL')

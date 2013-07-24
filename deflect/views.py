@@ -38,6 +38,6 @@ def redirect(request, key):
                   'utm_campaign': redirect.campaign,
                   'utm_content': redirect.content,
                   'utm_medium': redirect.medium}
-    url = add_query_params(redirect.url, utm_params)
+    url = add_query_params(redirect.long_url, utm_params)
 
     return HttpResponsePermanentRedirect(url)
