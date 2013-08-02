@@ -96,4 +96,4 @@ class CustomURL(models.Model):
                              help_text=_('An alias for the short URL; will be prefixed with "%s"' % alias_prefix))
 
     def __str__(self):
-        return alias_prefix + self.alias
+        return self.alias
