@@ -39,7 +39,7 @@ class RedirectViewTests(TestCase):
         Create a user and model instance to test against.
         """
         self.user = User.objects.create_user('testing')
-        self.r = RedirectURL.objects.create(url='http://www.example.com',
+        self.r = RedirectURL.objects.create(long_url='http://www.example.com',
                                             creator=self.user,
                                             campaign='example',
                                             medium='email',
