@@ -1,9 +1,34 @@
+from django import forms
 from django.contrib import admin
+
+import requests
 
 from .models import RedirectURL
 
 
+class RedirectURLAdminForm(forms.ModelForm):
+    def clean_long_url(self):
+        """
+        Validate connectivity to the provided target URL.
+        """
+        url = self.cleaned_data.get('long_url')
+        try:
+            r = requests.get(url)
+        except requests.exceptions.ConnectionError:
+            raise forms.ValidationError("Error connecting to URL")
+        except requests.exceptions.SSLError:
+            raise forms.ValidationError("Invalid SSL certificate")
+
+        try:
+            r.raise_for_status()
+        except requests.exceptions.HTTPError:
+            raise forms.ValidationError("Invalid status returned (%d)" % r.status_code)
+
+        return url
+
+
 class RedirectURLAdmin(admin.ModelAdmin):
+    form = RedirectURLAdminForm
     list_display = ('long_url', 'short_url', 'hits', 'last_used', 'creator', 'campaign', 'medium',)
     list_filter = ('creator__username', 'campaign', 'medium',)
     ordering = ('-last_used',)

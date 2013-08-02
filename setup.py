@@ -51,5 +51,6 @@ setup(
     install_requires=[
         'base32-crockford == 0.1.0',
         'qrcode == 3.0',
+        'requests == 1.2.3',
     ],
 )
