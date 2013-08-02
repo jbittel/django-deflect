@@ -13,7 +13,7 @@ class RedirectURLAdminForm(forms.ModelForm):
         """
         url = self.cleaned_data.get('long_url')
         try:
-            r = requests.get(url)
+            r = requests.head(url)
         except requests.exceptions.ConnectionError:
             raise forms.ValidationError("Error connecting to URL")
         except requests.exceptions.SSLError:
