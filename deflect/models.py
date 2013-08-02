@@ -92,8 +92,8 @@ class CustomURL(models.Model):
     alias_prefix = getattr(settings, 'DEFLECT_ALIAS_PREFIX', '')
 
     redirect = models.OneToOneField(RedirectURL)
-    alias = models.CharField(_('alias'), max_length=8, blank=True,
-                             help_text=_('An alias for the generated short URL; will be prefixed with "%s"' % alias_prefix))
+    alias = models.CharField(_('alias'), max_length=8, blank=True, unique=True,
+                             help_text=_('An alias for the short URL; will be prefixed with "%s"' % alias_prefix))
 
     def __str__(self):
         return alias_prefix + self.alias
