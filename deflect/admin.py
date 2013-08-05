@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.conf import settings
 from django.contrib import admin
@@ -6,6 +8,22 @@ import requests
 
 from .models import CustomURL
 from .models import RedirectURL
+
+
+class CustomURLAdminForm(forms.ModelForm):
+    def clean_alias(self):
+        """
+        Validate characters for the provided alias.
+        """
+        alias = self.cleaned_data.get('alias')
+        if bool(re.compile(r'[^a-zA-Z0-9-]').search(alias)):
+            raise forms.ValidationError("Alias contains invalid characters")
+        return alias
+
+
+class CustomURLInline(admin.StackedInline):
+    model = CustomURL
+    form = CustomURLAdminForm
 
 
 class RedirectURLAdminForm(forms.ModelForm):
@@ -27,10 +45,6 @@ class RedirectURLAdminForm(forms.ModelForm):
             raise forms.ValidationError("Invalid status returned (%d)" % r.status_code)
 
         return url
-
-
-class CustomURLInline(admin.StackedInline):
-    model = CustomURL
 
 
 class RedirectURLAdmin(admin.ModelAdmin):
