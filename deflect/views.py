@@ -24,14 +24,14 @@ def redirect(request, key):
     parameters.
     """
     try:
-        id = base32_crockford.decode(key)
+        key_id = base32_crockford.decode(key)
     except ValueError as e:
         logger.warning("Error decoding redirect '%s': %s" % (key, e))
         raise Http404
 
-    redirect = get_object_or_404(RedirectURL, pk=id)
-    RedirectURL.objects.filter(pk=id).update(hits=F('hits') + 1,
-                                             last_used=now())
+    redirect = get_object_or_404(RedirectURL, pk=key_id)
+    RedirectURL.objects.filter(pk=key_id).update(hits=F('hits') + 1,
+                                                 last_used=now())
 
     # Inject Google campaign parameters
     utm_params = {'utm_source': redirect.key,
