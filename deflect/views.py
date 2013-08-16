@@ -48,7 +48,8 @@ def alias(request, key):
     Given an alias key, update the statistics and redirect the user
     to the destination URL.
     """
-    alias = get_object_or_404(CustomURL.objects.select_related(), alias=key)
+    alias = get_object_or_404(CustomURL.objects.select_related(),
+                              alias=key.upper())
     RedirectURL.objects.filter(pk=alias.redirect.id).update(hits=F('hits') + 1,
                                                             last_used=now())
 

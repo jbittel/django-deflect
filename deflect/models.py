@@ -97,3 +97,8 @@ class CustomURL(models.Model):
 
     def __str__(self):
         return self.alias
+
+    def save(self, *args, **kwargs):
+        if self.alias:
+            self.alias = self.alias.upper()
+        super(CustomURL, self).save(*args, **kwargs)
