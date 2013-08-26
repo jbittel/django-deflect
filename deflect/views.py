@@ -9,8 +9,8 @@ from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
-from .models import CustomURL
-from .models import RedirectURL
+from .models import ShortURL
+from .models import VanityURL
 from .utils import add_query_params
 
 
@@ -29,9 +29,9 @@ def redirect(request, key):
         logger.warning("Error decoding redirect '%s': %s" % (key, e))
         raise Http404
 
-    redirect = get_object_or_404(RedirectURL, pk=key_id)
-    RedirectURL.objects.filter(pk=key_id).update(hits=F('hits') + 1,
-                                                 last_used=now())
+    redirect = get_object_or_404(ShortURL, pk=key_id)
+    ShortURL.objects.filter(pk=key_id).update(hits=F('hits') + 1,
+                                              last_used=now())
 
     # Inject Google campaign parameters
     utm_params = {'utm_source': redirect.key,
@@ -48,10 +48,10 @@ def alias(request, key):
     Given an alias key, update the statistics and redirect the user
     to the destination URL.
     """
-    alias = get_object_or_404(CustomURL.objects.select_related(),
+    alias = get_object_or_404(VanityURL.objects.select_related(),
                               alias=key.upper())
-    RedirectURL.objects.filter(pk=alias.redirect.id).update(hits=F('hits') + 1,
-                                                            last_used=now())
+    ShortURL.objects.filter(pk=alias.redirect.id).update(hits=F('hits') + 1,
+                                                         last_used=now())
 
     # Inject Google campaign parameters
     utm_params = {'utm_source': alias.redirect.key,

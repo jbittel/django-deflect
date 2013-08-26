@@ -9,12 +9,12 @@ except ImportError:  # Django version < 1.5
 
 import base32_crockford
 
-from ..models import RedirectURL
+from ..models import ShortURL
 
 
-class RedirectURLTests(TestCase):
+class ShortURLTests(TestCase):
     """
-    Tests for the RedirectURL model methods.
+    Tests for the ShortURL model methods.
     """
 
     def setUp(self):
@@ -22,7 +22,7 @@ class RedirectURLTests(TestCase):
         Create a user and model instance to test against.
         """
         self.user = User.objects.create_user('testing')
-        self.r = RedirectURL.objects.create(long_url='http://www.example.com',
+        self.r = ShortURL.objects.create(long_url='http://www.example.com',
                                             creator=self.user)
         self.key = base32_crockford.encode(self.r.pk)
 

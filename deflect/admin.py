@@ -6,11 +6,11 @@ from django.contrib import admin
 
 import requests
 
-from .models import CustomURL
-from .models import RedirectURL
+from .models import ShortURL
+from .models import VanityURL
 
 
-class CustomURLAdminForm(forms.ModelForm):
+class VanityURLAdminForm(forms.ModelForm):
     def clean_alias(self):
         """
         Validate characters for the provided alias.
@@ -21,12 +21,12 @@ class CustomURLAdminForm(forms.ModelForm):
         return alias
 
 
-class CustomURLInline(admin.StackedInline):
-    model = CustomURL
-    form = CustomURLAdminForm
+class VanityURLInline(admin.StackedInline):
+    model = VanityURL
+    form = VanityURLAdminForm
 
 
-class RedirectURLAdminForm(forms.ModelForm):
+class ShortURLAdminForm(forms.ModelForm):
     def clean_long_url(self):
         """
         Validate connectivity to the provided target URL.
@@ -47,8 +47,8 @@ class RedirectURLAdminForm(forms.ModelForm):
         return url
 
 
-class RedirectURLAdmin(admin.ModelAdmin):
-    form = RedirectURLAdminForm
+class ShortURLAdmin(admin.ModelAdmin):
+    form = ShortURLAdminForm
     list_display = ('long_url', 'short_url', 'hits', 'last_used', 'creator', 'campaign', 'medium',)
     list_filter = ('creator__username', 'campaign', 'medium',)
     ordering = ('-last_used',)
@@ -58,7 +58,7 @@ class RedirectURLAdmin(admin.ModelAdmin):
     # Only display the custom alias field if a prefix has been configured
     alias_prefix = getattr(settings, 'DEFLECT_ALIAS_PREFIX', '')
     if alias_prefix:
-        inlines = [CustomURLInline,]
+        inlines = [VanityURLInline,]
 
     fieldsets = ((None, {'fields': ('long_url', 'short_url',)}),
                  ('Google', {'fields': ('campaign', 'medium', 'content',)}),
@@ -68,7 +68,7 @@ class RedirectURLAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         """
-        On first save, set the ``RedirectURL`` creator to the current
+        On first save, set the ``ShortURL`` creator to the current
         user. On subsequent saves, skip this step.
         """
         if not change:
@@ -76,4 +76,4 @@ class RedirectURLAdmin(admin.ModelAdmin):
         obj.save()
 
 
-admin.site.register(RedirectURL, RedirectURLAdmin)
+admin.site.register(ShortURL, ShortURLAdmin)

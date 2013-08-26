@@ -21,9 +21,9 @@ except ImportError:  # Django version < 1.5
 
 
 @python_2_unicode_compatible
-class RedirectURL(models.Model):
+class ShortURL(models.Model):
     """
-    A ``RedirectURL`` represents a redirection mapping between a short
+    A ``ShortURL`` represents a redirection mapping between a short
     URL and the full destination URL. Several additional values are
     stored with related data and usage statistics.
     """
@@ -51,7 +51,7 @@ class RedirectURL(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.created = now()
-        super(RedirectURL, self).save(*args, **kwargs)
+        super(ShortURL, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('deflect-redirect', args=[self.key])
@@ -82,16 +82,16 @@ class RedirectURL(models.Model):
 
 
 @python_2_unicode_compatible
-class CustomURL(models.Model):
+class VanityURL(models.Model):
     """
-    A ``CustomURL`` is an optional alias for a ``RedirectURL`` that
+    A ``VanityURL`` is an optional alias for a ``ShortURL`` that
     can be used in place of the generated key. It is prepended with
     a configured prefix to differentiate an alias from a generated
     key.
     """
     alias_prefix = getattr(settings, 'DEFLECT_ALIAS_PREFIX', '')
 
-    redirect = models.OneToOneField(RedirectURL)
+    redirect = models.OneToOneField(ShortURL)
     alias = models.CharField(_('alias'), max_length=8, blank=True, unique=True,
                              help_text=_('An alias for the short URL; will be prefixed with "%s"' % alias_prefix))
 
@@ -101,4 +101,4 @@ class CustomURL(models.Model):
     def save(self, *args, **kwargs):
         if self.alias:
             self.alias = self.alias.upper()
-        super(CustomURL, self).save(*args, **kwargs)
+        super(VanityURL, self).save(*args, **kwargs)

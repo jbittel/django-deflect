@@ -11,8 +11,8 @@ except ImportError:  # Django version < 1.5
 
 import base32_crockford
 
-from ..models import CustomURL
-from ..models import RedirectURL
+from ..models import ShortURL
+from ..models import VanityURL
 
 
 class DeflectTests(TestCase):
@@ -46,7 +46,7 @@ class RedirectViewTests(DeflectTests):
         Create a user and model instance to test against.
         """
         self.user = User.objects.create_user('testing')
-        self.r = RedirectURL.objects.create(long_url='http://www.example.com',
+        self.r = ShortURL.objects.create(long_url='http://www.example.com',
                                             creator=self.user,
                                             campaign='example',
                                             medium='email',
@@ -75,12 +75,12 @@ class AliasViewTests(DeflectTests):
         Create a user and model instances to test against.
         """
         self.user = User.objects.create_user('testing')
-        self.r = RedirectURL.objects.create(long_url='http://www.example.com',
+        self.r = ShortURL.objects.create(long_url='http://www.example.com',
                                             creator=self.user,
                                             campaign='example',
                                             medium='email',
                                             content='test')
-        self.a = CustomURL.objects.create(redirect=self.r, alias='test')
+        self.a = VanityURL.objects.create(redirect=self.r, alias='test')
         self.key = base32_crockford.encode(self.r.pk)
 
         self.old_alias_prefix = getattr(settings, 'DEFLECT_ALIAS_PREFIX', '')
