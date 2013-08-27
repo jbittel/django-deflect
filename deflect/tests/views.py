@@ -46,12 +46,15 @@ class RedirectViewTests(DeflectTests):
         Create a user and model instance to test against.
         """
         self.user = User.objects.create_user('testing')
-        self.r = ShortURL.objects.create(long_url='http://www.example.com',
-                                            creator=self.user,
-                                            campaign='example',
-                                            medium='email',
-                                            content='test')
-        self.key = base32_crockford.encode(self.r.pk)
+        self.shorturl = ShortURL.objects.create(long_url='http://www.example.com',
+                                                creator=self.user,
+                                                campaign='example',
+                                                medium='email',
+                                                content='test')
+        self.vanityurl = VanityURL.objects.create(redirect=self.shorturl,
+                                                  alias='test')
+        self.key = base32_crockford.encode(self.shorturl.pk)
+        self.invalid_key = base32_crockford.encode(self.shorturl.pk + 1)
 
     def test_redirect(self):
         """
@@ -65,39 +68,12 @@ class RedirectViewTests(DeflectTests):
         self.assertInHeader(response, 'utm_medium=email', 'location')
         self.assertInHeader(response, 'utm_content=test', 'location')
 
-
-class AliasViewTests(DeflectTests):
-    """
-    Tests for the alias view.
-    """
-    def setUp(self):
-        """
-        Create a user and model instances to test against.
-        """
-        self.user = User.objects.create_user('testing')
-        self.r = ShortURL.objects.create(long_url='http://www.example.com',
-                                            creator=self.user,
-                                            campaign='example',
-                                            medium='email',
-                                            content='test')
-        self.a = VanityURL.objects.create(redirect=self.r, alias='test')
-        self.key = base32_crockford.encode(self.r.pk)
-
-        self.old_alias_prefix = getattr(settings, 'DEFLECT_ALIAS_PREFIX', '')
-        settings.DEFLECT_ALIAS_PREFIX = 'a/'
-
-    def tearDown(self):
-        """
-        Undo modifications made to the test environment.
-        """
-        settings.DEFLECT_ALIAS_PREFIX = self.old_alias_prefix
-
     def test_alias(self):
         """
-        A valid alias key should return a permanent redirect to the
+        A valid vanity URL should return a permanent redirect to the
         target URL with all parameters included.
         """
-        response = self.client.get(reverse('deflect-alias', args=['test']))
+        response = self.client.get(reverse('deflect-redirect', args=['test']))
         self.assertRedirectsNoFollow(response, 'http://www.example.com')
         self.assertInHeader(response, 'utm_source=' + self.key, 'location')
         self.assertInHeader(response, 'utm_campaign=example', 'location')

@@ -54,11 +54,7 @@ class ShortURLAdmin(admin.ModelAdmin):
     ordering = ('-last_used',)
     readonly_fields = ('created', 'short_url', 'qr_code', 'hits', 'last_used',)
     search_fields = ['long_url', 'campaign',]
-
-    # Only display the custom alias field if a prefix has been configured
-    alias_prefix = getattr(settings, 'DEFLECT_ALIAS_PREFIX', '')
-    if alias_prefix:
-        inlines = [VanityURLInline,]
+    inlines = [VanityURLInline,]
 
     fieldsets = ((None, {'fields': ('long_url', 'short_url',)}),
                  ('Google', {'fields': ('campaign', 'medium', 'content',)}),

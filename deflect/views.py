@@ -24,10 +24,14 @@ def redirect(request, key):
     parameters.
     """
     try:
-        key_id = base32_crockford.decode(key)
-    except ValueError as e:
-        logger.warning("Error decoding redirect '%s': %s" % (key, e))
-        raise Http404
+        alias = VanityURL.objects.select_related().get(alias=key.upper())
+        key_id = alias.redirect.id
+    except VanityURL.DoesNotExist:
+        try:
+            key_id = base32_crockford.decode(key)
+        except ValueError as e:
+            logger.warning("Error decoding redirect '%s': %s" % (key, e))
+            raise Http404
 
     redirect = get_object_or_404(ShortURL, pk=key_id)
     ShortURL.objects.filter(pk=key_id).update(hits=F('hits') + 1,
@@ -39,25 +43,5 @@ def redirect(request, key):
                   'utm_content': redirect.content,
                   'utm_medium': redirect.medium}
     url = add_query_params(redirect.long_url, utm_params)
-
-    return HttpResponsePermanentRedirect(url)
-
-
-def alias(request, key):
-    """
-    Given an alias key, update the statistics and redirect the user
-    to the destination URL.
-    """
-    alias = get_object_or_404(VanityURL.objects.select_related(),
-                              alias=key.upper())
-    ShortURL.objects.filter(pk=alias.redirect.id).update(hits=F('hits') + 1,
-                                                         last_used=now())
-
-    # Inject Google campaign parameters
-    utm_params = {'utm_source': alias.redirect.key,
-                  'utm_campaign': alias.redirect.campaign,
-                  'utm_content': alias.redirect.content,
-                  'utm_medium': alias.redirect.medium}
-    url = add_query_params(alias.redirect.long_url, utm_params)
 
     return HttpResponsePermanentRedirect(url)

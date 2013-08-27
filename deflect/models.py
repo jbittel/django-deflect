@@ -89,11 +89,9 @@ class VanityURL(models.Model):
     a configured prefix to differentiate an alias from a generated
     key.
     """
-    alias_prefix = getattr(settings, 'DEFLECT_ALIAS_PREFIX', '')
-
     redirect = models.OneToOneField(ShortURL)
     alias = models.CharField(_('alias'), max_length=8, blank=True, unique=True,
-                             help_text=_('An alias for the short URL; will be prefixed with "%s"' % alias_prefix))
+                             help_text=_('A custom alias for the short URL'))
 
     def __str__(self):
         return self.alias
