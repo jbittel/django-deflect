@@ -79,3 +79,17 @@ class RedirectViewTests(DeflectTests):
         self.assertInHeader(response, 'utm_campaign=example', 'location')
         self.assertInHeader(response, 'utm_medium=email', 'location')
         self.assertInHeader(response, 'utm_content=test', 'location')
+
+    def test_invalid_key(self):
+        """
+        An invalid key should return a 404 status.
+        """
+        response = self.client.get(reverse('deflect-redirect', args=[self.invalid_key]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_invalid_decode(self):
+        """
+        An invalid decoding error should return a 404 status.
+        """
+        response = self.client.get(reverse('deflect-redirect', args=['u']))
+        self.assertEqual(response.status_code, 404)
