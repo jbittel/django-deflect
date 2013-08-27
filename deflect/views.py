@@ -30,7 +30,7 @@ def redirect(request, key):
         try:
             key_id = base32_crockford.decode(key)
         except ValueError as e:
-            logger.warning("Error decoding redirect '%s': %s" % (key, e))
+            logger.warning("Error decoding redirect: %s" % e)
             raise Http404
 
     redirect = get_object_or_404(ShortURL, pk=key_id)
