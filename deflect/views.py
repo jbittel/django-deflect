@@ -24,7 +24,7 @@ def redirect(request, key):
     parameters.
     """
     try:
-        alias = ShortURLAlias.objects.select_related().get(alias=key.upper())
+        alias = ShortURLAlias.objects.select_related().get(alias=key.lower())
         key_id = alias.redirect.id
     except ShortURLAlias.DoesNotExist:
         try:
