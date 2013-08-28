@@ -42,8 +42,8 @@ class ShortURL(models.Model):
                               help_text=_('The advertising or marketing medium, e.g.: postcard, banner, email newsletter'))
 
     class Meta:
-        verbose_name = _('Redirect URL')
-        verbose_name_plural = _('Redirect URLs')
+        verbose_name = _('Short URL')
+        verbose_name_plural = _('Short URLs')
 
     def __str__(self):
         return self.key
@@ -82,16 +82,18 @@ class ShortURL(models.Model):
 
 
 @python_2_unicode_compatible
-class VanityURL(models.Model):
+class ShortURLAlias(models.Model):
     """
-    A ``VanityURL`` is an optional alias for a ``ShortURL`` that
-    can be used in place of the generated key. It is prepended with
-    a configured prefix to differentiate an alias from a generated
-    key.
+    A ``ShortURLAlias`` is an optional, custom alias for a ``ShortURL``
+    that can be used in place of the generated key.
     """
     redirect = models.OneToOneField(ShortURL)
     alias = models.CharField(_('alias'), max_length=8, blank=True, unique=True,
                              help_text=_('A custom alias for the short URL'))
+
+    class Meta:
+        verbose_name = _('Alias')
+        verbose_name_plural = _('Aliases')
 
     def __str__(self):
         return self.alias
@@ -99,4 +101,4 @@ class VanityURL(models.Model):
     def save(self, *args, **kwargs):
         if self.alias:
             self.alias = self.alias.upper()
-        super(VanityURL, self).save(*args, **kwargs)
+        super(ShortURLAlias, self).save(*args, **kwargs)

@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 
 from .models import ShortURL
-from .models import VanityURL
+from .models import ShortURLAlias
 from .utils import add_query_params
 
 
@@ -24,9 +24,9 @@ def redirect(request, key):
     parameters.
     """
     try:
-        alias = VanityURL.objects.select_related().get(alias=key.upper())
+        alias = ShortURLAlias.objects.select_related().get(alias=key.upper())
         key_id = alias.redirect.id
-    except VanityURL.DoesNotExist:
+    except ShortURLAlias.DoesNotExist:
         try:
             key_id = base32_crockford.decode(key)
         except ValueError as e:

@@ -12,7 +12,7 @@ except ImportError:  # Django version < 1.5
 import base32_crockford
 
 from ..models import ShortURL
-from ..models import VanityURL
+from ..models import ShortURLAlias
 
 
 class DeflectTests(TestCase):
@@ -51,7 +51,7 @@ class RedirectViewTests(DeflectTests):
                                                 campaign='example',
                                                 medium='email',
                                                 content='test')
-        self.vanityurl = VanityURL.objects.create(redirect=self.shorturl,
+        self.alias = ShortURLAlias.objects.create(redirect=self.shorturl,
                                                   alias='test')
         self.key = base32_crockford.encode(self.shorturl.pk)
         self.invalid_key = base32_crockford.encode(self.shorturl.pk + 1)
@@ -70,8 +70,8 @@ class RedirectViewTests(DeflectTests):
 
     def test_alias(self):
         """
-        A valid vanity URL should return a permanent redirect to the
-        target URL with all parameters included.
+        A valid alias should return a permanent redirect to the target
+        URL with all parameters included.
         """
         response = self.client.get(reverse('deflect-redirect', args=['test']))
         self.assertRedirectsNoFollow(response, 'http://www.example.com')

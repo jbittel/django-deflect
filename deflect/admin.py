@@ -7,10 +7,10 @@ from django.contrib import admin
 import requests
 
 from .models import ShortURL
-from .models import VanityURL
+from .models import ShortURLAlias
 
 
-class VanityURLAdminForm(forms.ModelForm):
+class ShortURLAliasAdminForm(forms.ModelForm):
     def clean_alias(self):
         """
         Validate characters for the provided alias.
@@ -21,9 +21,9 @@ class VanityURLAdminForm(forms.ModelForm):
         return alias
 
 
-class VanityURLInline(admin.StackedInline):
-    model = VanityURL
-    form = VanityURLAdminForm
+class ShortURLAliasInline(admin.StackedInline):
+    model = ShortURLAlias
+    form = ShortURLAliasAdminForm
 
 
 class ShortURLAdminForm(forms.ModelForm):
@@ -54,7 +54,7 @@ class ShortURLAdmin(admin.ModelAdmin):
     ordering = ('-last_used',)
     readonly_fields = ('created', 'short_url', 'qr_code', 'hits', 'last_used',)
     search_fields = ['long_url', 'campaign',]
-    inlines = [VanityURLInline,]
+    inlines = [ShortURLAliasInline,]
 
     fieldsets = ((None, {'fields': ('long_url', 'short_url',)}),
                  ('Google', {'fields': ('campaign', 'medium', 'content',)}),
