@@ -24,8 +24,8 @@ def redirect(request, key):
     parameters.
     """
     try:
-        alias = ShortURLAlias.objects.select_related().get(alias=key.lower())
-        key_id = alias.redirect.id
+        alias = ShortURLAlias.objects.get(alias=key.lower())
+        key_id = alias.redirect_id
     except ShortURLAlias.DoesNotExist:
         try:
             key_id = base32_crockford.decode(key)
