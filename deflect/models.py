@@ -56,16 +56,25 @@ class ShortURL(models.Model):
     def get_absolute_url(self):
         return reverse('deflect-redirect', args=[self.key])
 
+    def get_alias_url(self):
+        try:
+            return reverse('deflect-redirect', args=[self.shorturlalias.alias])
+        except ShortURLAlias.DoesNotExist:
+            return self.get_absolute_url()
+
     @property
     def key(self):
         return base32_crockford.encode(self.pk)
 
-    def short_url(self):
+    def short_url(self, alias=True):
         """
-        Return the complete short URL for the current redirect.
+        Return the complete short URL for the current redirect. If
+        ``alias`` is ``True``, use the URL alias when available.
         """
         url_base = 'http://%s' % Site.objects.get_current().domain
-        return url_base + self.get_absolute_url()
+        if not alias:
+            return url_base + self.get_absolute_url()
+        return url_base + self.get_alias_url()
 
     def qr_code(self):
         """
@@ -73,7 +82,7 @@ class ShortURL(models.Model):
         representation of the short URL as a QR code.
         """
         png_stream = StringIO()
-        img = qrcode.make(self.short_url())
+        img = qrcode.make(self.short_url(alias=False))
         img.save(png_stream)
         png_base64 = base64.b64encode(png_stream.getvalue())
         png_stream.close()
