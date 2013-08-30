@@ -42,8 +42,8 @@ class ShortURL(models.Model):
                               help_text=_('The advertising or marketing medium, e.g.: postcard, banner, email newsletter'))
 
     class Meta:
-        verbose_name = _('Short URL')
-        verbose_name_plural = _('Short URLs')
+        verbose_name = _('short URL')
+        verbose_name_plural = _('short URLs')
 
     def __str__(self):
         return self.key
@@ -92,8 +92,8 @@ class ShortURLAlias(models.Model):
                              help_text=_('A custom alias for the short URL'))
 
     class Meta:
-        verbose_name = _('Alias')
-        verbose_name_plural = _('Aliases')
+        verbose_name = _('alias')
+        verbose_name_plural = _('aliases')
 
     def __str__(self):
         return self.alias
