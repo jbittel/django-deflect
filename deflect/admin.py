@@ -49,7 +49,7 @@ class ShortURLAdminForm(forms.ModelForm):
 
 class ShortURLAdmin(admin.ModelAdmin):
     form = ShortURLAdminForm
-    list_display = ('long_url', 'short_url', 'shorturlalias', 'hits', 'last_used', 'creator', 'campaign', 'medium',)
+    list_display = ('long_url', 'short_url', 'hits', 'last_used', 'creator', 'campaign', 'medium',)
     list_filter = ('creator__username', 'campaign', 'medium',)
     ordering = ('-last_used',)
     readonly_fields = ('created', 'short_url', 'qr_code', 'hits', 'last_used',)
