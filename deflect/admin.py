@@ -1,7 +1,6 @@
 import re
 
 from django import forms
-from django.conf import settings
 from django.contrib import admin
 
 import requests
