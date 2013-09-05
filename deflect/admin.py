@@ -48,18 +48,18 @@ class ShortURLAdminForm(forms.ModelForm):
 
 class ShortURLAdmin(admin.ModelAdmin):
     form = ShortURLAdminForm
-    list_display = ('long_url', 'short_url', 'hits', 'last_used', 'creator', 'campaign', 'medium',)
-    list_filter = ('creator__username', 'campaign', 'medium',)
-    ordering = ('-last_used',)
-    readonly_fields = ('created', 'short_url', 'qr_code', 'hits', 'last_used',)
-    search_fields = ['long_url', 'campaign', 'shorturlalias__alias',]
-    inlines = [ShortURLAliasInline,]
+    inlines = [ShortURLAliasInline]
+    list_display = ('long_url', 'short_url', 'hits', 'last_used', 'creator', 'campaign', 'medium')
+    list_filter = ('creator__username', 'campaign', 'medium')
+    ordering = ('-last_used')
+    readonly_fields = ('created', 'short_url', 'qr_code', 'hits', 'last_used')
+    search_fields = ['long_url', 'campaign', 'shorturlalias__alias']
 
-    fieldsets = ((None, {'fields': ('long_url', 'short_url',)}),
-                 ('Google', {'fields': ('campaign', 'medium', 'content',)}),
-                 ('Additional Info', {'fields': ('description', 'qr_code',)}),
-                 ('Short URL Usage', {'classes': ('collapse grp-collapse grp-closed',),
-                                      'fields': ('hits', 'created', 'last_used',)}),)
+    fieldsets = ((None, {'fields': ('long_url', 'short_url')}),
+                 ('Google', {'fields': ('campaign', 'medium', 'content')}),
+                 ('Additional Info', {'fields': ('description', 'qr_code')}),
+                 ('Short URL Usage', {'classes': ('collapse grp-collapse grp-closed'),
+                                      'fields': ('hits', 'created', 'last_used')}))
 
     def save_model(self, request, obj, form, change):
         """
