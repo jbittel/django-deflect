@@ -32,7 +32,7 @@ class ShortURLAdminForm(forms.ModelForm):
         """
         url = self.cleaned_data.get('long_url')
         try:
-            r = requests.head(url)
+            r = requests.head(url, allow_redirects=True)
         except requests.exceptions.ConnectionError:
             raise forms.ValidationError("Error connecting to URL")
         except requests.exceptions.SSLError:
@@ -43,7 +43,7 @@ class ShortURLAdminForm(forms.ModelForm):
         except requests.exceptions.HTTPError:
             raise forms.ValidationError("Invalid status returned (%d)" % r.status_code)
 
-        return url
+        return r.url
 
 
 class ShortURLAdmin(admin.ModelAdmin):
