@@ -50,7 +50,7 @@ setup(
     keywords=['django', 'url', 'short url', 'redirect', 'redirection'],
     install_requires=[
         'base32-crockford == 0.1.0',
-        'qrcode == 3.0',
+        'qrcode == 4.0.1',
         'requests == 1.2.3',
     ],
 )
