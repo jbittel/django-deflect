@@ -32,11 +32,13 @@ class ShortURLAdminForm(forms.ModelForm):
         """
         url = self.cleaned_data.get('long_url')
         try:
-            r = requests.head(url, allow_redirects=True)
+            r = requests.head(url, allow_redirects=True, timeout=3.0)
         except requests.exceptions.ConnectionError:
             raise forms.ValidationError("Error connecting to URL")
         except requests.exceptions.SSLError:
             raise forms.ValidationError("Invalid SSL certificate")
+        except requests.exceptions.Timeout:
+            raise forms.ValidationError("Timeout connecting to URL")
 
         try:
             r.raise_for_status()
