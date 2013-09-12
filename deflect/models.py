@@ -96,7 +96,7 @@ class ShortURLAlias(models.Model):
     that can be used in place of the generated key.
     """
     redirect = models.OneToOneField(ShortURL)
-    alias = models.CharField(_('alias'), max_length=8, blank=True, unique=True,
+    alias = models.CharField(_('alias'), max_length=16, blank=True, unique=True,
                              help_text=_('A custom alias for the short URL'))
 
     class Meta:
