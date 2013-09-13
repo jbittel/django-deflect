@@ -52,7 +52,8 @@ class ShortURLAdmin(admin.ModelAdmin):
     form = ShortURLAdminForm
     inlines = [ShortURLAliasInline]
     list_display = ('long_url', 'short_url', 'hits', 'last_used', 'creator', 'campaign', 'medium')
-    list_filter = ('creator__username', 'campaign', 'medium')
+    list_filter = ('campaign', 'medium')
+    _list_filter = list_filter
     ordering = ['-last_used']
     readonly_fields = ('created', 'short_url', 'qr_code', 'hits', 'last_used')
     search_fields = ['long_url', 'campaign', 'shorturlalias__alias']
@@ -62,6 +63,16 @@ class ShortURLAdmin(admin.ModelAdmin):
                  ('Additional Info', {'fields': ('description', 'qr_code')}),
                  ('Short URL Usage', {'classes': ('collapse grp-collapse grp-closed'),
                                       'fields': ('hits', 'created', 'last_used')}))
+
+    def changelist_view(self, request, extra_context=None):
+        """
+        Inject additional filtering options for superusers.
+        """
+        if request.user.is_superuser:
+            self.list_filter = self._list_filter + ('creator__username',)
+        else:
+            self.list_filter = self._list_filter
+        return super(ShortURLAdmin, self).changelist_view(request, extra_context=extra_context)
 
     def has_change_permission(self, request, obj=None):
         """
