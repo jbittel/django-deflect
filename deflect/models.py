@@ -18,6 +18,9 @@ try:
 except ImportError:  # Django version < 1.5
     from django.contrib.auth.models import User
 
+from .utils import add_query_params
+
+
 
 @python_2_unicode_compatible
 class ShortURL(models.Model):
@@ -60,6 +63,18 @@ class ShortURL(models.Model):
             return reverse('deflect-redirect', args=[self.shorturlalias.alias])
         except ShortURLAlias.DoesNotExist:
             return self.get_absolute_url()
+
+    def get_tracking_url(self):
+        """
+        Build the complete tracking URL by injecting Google campaign
+        parameters into the destination URL.
+        """
+        utm_params = {'utm_source': self.key,
+                      'utm_campaign': self.campaign,
+                      'utm_content': self.content,
+                      'utm_medium': self.medium}
+        return add_query_params(self.long_url, utm_params)
+    get_tracking_url.short_description = 'Tracking URL'
 
     @property
     def key(self):

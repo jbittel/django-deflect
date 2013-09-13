@@ -11,7 +11,6 @@ from django.utils.timezone import now
 
 from .models import ShortURL
 from .models import ShortURLAlias
-from .utils import add_query_params
 
 
 logger = logging.getLogger(__name__)
@@ -37,11 +36,4 @@ def redirect(request, key):
     ShortURL.objects.filter(pk=key_id).update(hits=F('hits') + 1,
                                               last_used=now())
 
-    # Inject Google campaign parameters
-    utm_params = {'utm_source': redirect.key,
-                  'utm_campaign': redirect.campaign,
-                  'utm_content': redirect.content,
-                  'utm_medium': redirect.medium}
-    url = add_query_params(redirect.long_url, utm_params)
-
-    return HttpResponsePermanentRedirect(url)
+    return HttpResponsePermanentRedirect(redirect.get_tracking_url())
