@@ -1,10 +1,6 @@
 from __future__ import unicode_literals
 
-import base64
-from cStringIO import StringIO
-
 import base32_crockford
-import qrcode
 
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
@@ -19,6 +15,7 @@ except ImportError:  # Django version < 1.5
     from django.contrib.auth.models import User
 
 from .utils import add_query_params
+from .utils import get_qr_code_img
 
 
 
@@ -92,15 +89,10 @@ class ShortURL(models.Model):
 
     def qr_code(self):
         """
-        Return an HTML img tag containing an inline base64 encoded
-        representation of the short URL as a QR code.
+        Return a HTML img tag with an inline representation of the
+        short URL as a QR code. The absolute URL is used for the URL.
         """
-        png_stream = StringIO()
-        img = qrcode.make(self.short_url(alias=False))
-        img.save(png_stream)
-        png_base64 = base64.b64encode(png_stream.getvalue())
-        png_stream.close()
-        return '<img src="data:image/png;base64,%s" />' % png_base64
+        return get_qr_code_img(self.short_url(alias=False))
     qr_code.allow_tags = True
 
 

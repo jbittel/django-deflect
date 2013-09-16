@@ -1,8 +1,12 @@
+import base64
+from cStringIO import StringIO
 try:
     from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 except ImportError:  # pragma: no cover
     from urllib import urlencode
     from urlparse import parse_qsl, urlparse, urlunparse
+
+import qrcode
 
 
 def add_query_params(url, params):
@@ -18,3 +22,16 @@ def add_query_params(url, params):
     query.update(params)
     parts[4] = urlencode(query)
     return urlunparse(parts)
+
+
+def get_qr_code_img(url):
+    """
+    Return an HTML img tag containing an inline base64 encoded
+    representation of the provided URL as a QR code.
+    """
+    png_stream = StringIO()
+    img = qrcode.make(url)
+    img.save(png_stream)
+    png_base64 = base64.b64encode(png_stream.getvalue())
+    png_stream.close()
+    return '<img src="data:image/png;base64,%s" />' % png_base64
