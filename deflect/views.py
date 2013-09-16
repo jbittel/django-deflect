@@ -3,11 +3,9 @@ from __future__ import unicode_literals
 import base32_crockford
 import logging
 
-from django.db.models import F
 from django.http import Http404
 from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
-from django.utils.timezone import now
 
 from .models import ShortURL
 from .models import ShortURLAlias
@@ -33,7 +31,6 @@ def redirect(request, key):
             raise Http404
 
     redirect = get_object_or_404(ShortURL, pk=key_id)
-    ShortURL.objects.filter(pk=key_id).update(hits=F('hits') + 1,
-                                              last_used=now())
+    ShortURL.objects.increment_hits(redirect.pk)
 
     return HttpResponsePermanentRedirect(redirect.get_tracking_url())

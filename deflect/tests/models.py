@@ -79,3 +79,13 @@ class ShortURLTests(TestCase):
         inline base64 PNG image.
         """
         self.assertIn('<img src="data:image/png;base64,', self.shorturl.qr_code())
+
+    def test_increment_hits(self):
+        """
+        After calling increment_hits() the hits should be
+        incremented and the last used timestamp should be set.
+        """
+        ShortURL.objects.increment_hits(self.shorturl.pk)
+        url = ShortURL.objects.get(pk=self.shorturl.pk)
+        self.assertEqual(url.hits, 1)
+        self.assertIsNotNone(url.last_used)

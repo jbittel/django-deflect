@@ -5,6 +5,7 @@ import base32_crockford
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models import F
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -17,6 +18,14 @@ except ImportError:  # Django version < 1.5
 from .utils import add_query_params
 from .utils import get_qr_code_img
 
+
+class ShortURLManager(models.Manager):
+    def increment_hits(self, id):
+        """
+        Increment a ``ShortURL``s hits by one, and set the last
+        used timestamp to the current time.
+        """
+        self.filter(pk=id).update(hits=F('hits') + 1, last_used=now())
 
 
 @python_2_unicode_compatible
@@ -39,6 +48,8 @@ class ShortURL(models.Model):
                                help_text=_('The target URL to which the short URL redirects'))
     medium = models.CharField(_('medium'), max_length=64, blank=True,
                               help_text=_('The advertising or marketing medium, e.g.: postcard, banner, email newsletter'))
+
+    objects = ShortURLManager()
 
     class Meta:
         verbose_name = _('short URL')
