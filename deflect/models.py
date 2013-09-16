@@ -78,9 +78,9 @@ class ShortURL(models.Model):
         parameters into the destination URL.
         """
         utm_params = {'utm_source': self.key,
-                      'utm_campaign': self.campaign,
-                      'utm_content': self.content,
-                      'utm_medium': self.medium}
+                      'utm_campaign': self.campaign.lower(),
+                      'utm_content': self.content.lower(),
+                      'utm_medium': self.medium.lower()}
         return add_query_params(self.long_url, utm_params)
     get_tracking_url.short_description = 'Tracking URL'
 
