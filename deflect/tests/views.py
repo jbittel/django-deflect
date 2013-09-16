@@ -47,9 +47,9 @@ class RedirectViewTests(DeflectTests):
         self.user = User.objects.create_user('testing')
         self.shorturl = ShortURL.objects.create(long_url='http://www.example.com',
                                                 creator=self.user,
-                                                campaign='example',
-                                                medium='email',
-                                                content='test')
+                                                campaign='Example',
+                                                medium='Email',
+                                                content='Test')
         self.alias = ShortURLAlias.objects.create(redirect=self.shorturl,
                                                   alias='test')
         self.key = base32_crockford.encode(self.shorturl.pk)

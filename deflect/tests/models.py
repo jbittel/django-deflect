@@ -25,9 +25,9 @@ class ShortURLTests(TestCase):
         self.user = User.objects.create_user('testing')
         self.shorturl = ShortURL.objects.create(long_url='http://www.example.com',
                                                 creator=self.user,
-                                                campaign='Test',
-                                                content='1',
-                                                medium='email')
+                                                campaign='Example',
+                                                medium='Email',
+                                                content='Test')
         self.alias = ShortURLAlias.objects.create(redirect=self.shorturl,
                                                   alias='test')
         self.key = base32_crockford.encode(self.shorturl.pk)
@@ -61,9 +61,9 @@ class ShortURLTests(TestCase):
         tracking_url = self.shorturl.get_tracking_url()
         self.assertIn('http://www.example.com', tracking_url)
         self.assertIn('utm_source=%s' % self.key, tracking_url)
-        self.assertIn('utm_campaign=Test', tracking_url)
-        self.assertIn('utm_content=1', tracking_url)
+        self.assertIn('utm_campaign=example', tracking_url)
         self.assertIn('utm_medium=email', tracking_url)
+        self.assertIn('utm_content=test', tracking_url)
 
     def test_short_url(self):
         """
