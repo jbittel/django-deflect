@@ -44,7 +44,7 @@ class ShortURL(models.Model):
     description = models.TextField(_('description'), blank=True)
     hits = models.IntegerField(_('hits'), default=0, editable=False)
     last_used = models.DateTimeField(_('last used'), editable=False, blank=True, null=True)
-    long_url = models.URLField(_('long url'),
+    long_url = models.URLField(_('long URL'),
                                help_text=_('The target URL to which the short URL redirects'))
     medium = models.CharField(_('medium'), max_length=64, blank=True,
                               help_text=_('The advertising or marketing medium, e.g.: postcard, banner, email newsletter'))
@@ -82,7 +82,7 @@ class ShortURL(models.Model):
                       'utm_content': self.content.lower(),
                       'utm_medium': self.medium.lower()}
         return add_query_params(self.long_url, utm_params)
-    get_tracking_url.short_description = 'Tracking URL'
+    get_tracking_url.short_description = 'tracking URL'
 
     @property
     def key(self):
@@ -97,6 +97,7 @@ class ShortURL(models.Model):
         if not alias:
             return url_base + self.get_absolute_url()
         return url_base + self.get_alias_url()
+    short_url.short_description = 'short URL'
 
     def qr_code(self):
         """
@@ -105,6 +106,7 @@ class ShortURL(models.Model):
         """
         return get_qr_code_img(self.short_url(alias=False))
     qr_code.allow_tags = True
+    qr_code.short_description = 'QR code'
 
 
 @python_2_unicode_compatible
