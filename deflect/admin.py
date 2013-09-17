@@ -7,6 +7,7 @@ import requests
 
 from .models import ShortURL
 from .models import ShortURLAlias
+from .widgets import DataListInput
 
 
 class ShortURLAliasAdminForm(forms.ModelForm):
@@ -26,6 +27,18 @@ class ShortURLAliasInline(admin.StackedInline):
 
 
 class ShortURLAdminForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        """
+        Provide a datalist option set for selected form fields. These
+        are instantiated here so they are dynamically built each
+        time the form is displayed.
+        """
+        super(ShortURLAdminForm, self).__init__(*args, **kwargs)
+        campaign_choices = ShortURL.objects.exclude(campaign__exact='').values_list('campaign').distinct()
+        medium_choices = ShortURL.objects.exclude(medium__exact='').values_list('medium').distinct()
+        self.fields['campaign'].widget = DataListInput(choices=campaign_choices)
+        self.fields['medium'].widget = DataListInput(choices=medium_choices)
+
     def clean_long_url(self):
         """
         Validate connectivity to the provided target URL.
