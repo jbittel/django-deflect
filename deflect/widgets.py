@@ -30,7 +30,7 @@ class DataListInput(forms.TextInput):
     def render_options(self, name, choices):
         output = []
         output.append('<datalist id="id_%s_list">' % name)
-        output.append('<select>')
+        output.append('<select style="display:none">')
         for option in chain(self.choices, choices):
             output.append(format_html('<option value="{0}" />', force_text(option)))
         output.append('</select>')
