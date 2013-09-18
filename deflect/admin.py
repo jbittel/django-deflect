@@ -64,7 +64,8 @@ class ShortURLAdminForm(forms.ModelForm):
 class ShortURLAdmin(admin.ModelAdmin):
     form = ShortURLAdminForm
     inlines = [ShortURLAliasInline]
-    list_display = ('long_url', 'short_url', 'hits', 'last_used', 'creator', 'campaign', 'medium')
+    list_display = ('long_url', 'short_url', 'hits', 'last_used', 'campaign', 'medium')
+    _list_display = list_display
     list_filter = ('campaign', 'medium')
     _list_filter = list_filter
     ordering = ['-last_used']
@@ -83,8 +84,10 @@ class ShortURLAdmin(admin.ModelAdmin):
         """
         if request.user.is_superuser:
             self.list_filter = self._list_filter + ('creator__username',)
+            self.list_display = self._list_display + ('creator',)
         else:
             self.list_filter = self._list_filter
+            self.list_display = self._list_display
         return super(ShortURLAdmin, self).changelist_view(request, extra_context=extra_context)
 
     def has_change_permission(self, request, obj=None):
