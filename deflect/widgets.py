@@ -2,13 +2,13 @@ from __future__ import unicode_literals
 
 from itertools import chain
 
-from django import forms
+from django.contrib.admin.widgets import AdminTextInputWidget
 from django.utils.encoding import force_text
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 
-class DataListInput(forms.TextInput):
+class DataListInput(AdminTextInputWidget):
     """
     A form widget that displays a standard ``TextInput`` field, as well
     as an HTML5 datalist element. This provides a set of options that
