@@ -17,7 +17,7 @@ class DataListInput(AdminTextInputWidget):
     """
     def __init__(self, attrs=None, choices=()):
         super(DataListInput, self).__init__(attrs)
-        self.choices = list(chain.from_iterable(choices))
+        self.choices = list(choices)
 
     def render(self, name, value, attrs={}, choices=()):
         attrs['list'] = 'id_%s_list' % name
