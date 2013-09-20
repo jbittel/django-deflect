@@ -34,10 +34,8 @@ class ShortURLAdminForm(forms.ModelForm):
         time the form is displayed.
         """
         super(ShortURLAdminForm, self).__init__(*args, **kwargs)
-        campaign_choices = ShortURL.objects.exclude(campaign__exact='').values_list('campaign').distinct()
-        medium_choices = ShortURL.objects.exclude(medium__exact='').values_list('medium').distinct()
-        self.fields['campaign'].widget = DataListInput(choices=campaign_choices)
-        self.fields['medium'].widget = DataListInput(choices=medium_choices)
+        self.fields['campaign'].widget = DataListInput(choices=ShortURL.objects.get_unique_list('campaign'))
+        self.fields['medium'].widget = DataListInput(choices=ShortURL.objects.get_unique_list('medium'))
 
     def clean_long_url(self):
         """

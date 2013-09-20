@@ -27,6 +27,13 @@ class ShortURLManager(models.Manager):
         """
         self.filter(pk=id).update(hits=F('hits') + 1, last_used=now())
 
+    def get_unique_list(self, field):
+        """
+        Get a list of unique values from a specified field name.
+        """
+        exclude_fields = {'%s__exact' % field: ''}
+        return self.exclude(**exclude_fields).values_list(field).distinct()
+
 
 @python_2_unicode_compatible
 class ShortURL(models.Model):
