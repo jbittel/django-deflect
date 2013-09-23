@@ -8,20 +8,20 @@ from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 
-class DataListInput(AdminTextInputWidget):
+class DatalistTextInput(AdminTextInputWidget):
     """
     A form widget that displays a standard ``TextInput`` field, as well
-    as an HTML5 datalist element. This provides a set of options that
+    as an HTML5 <datalist> element. This provides a set of options that
     the user can select from, along with the ability to enter a custom
     value. Suggested options are matched as the user begins typing.
     """
     def __init__(self, attrs=None, choices=()):
-        super(DataListInput, self).__init__(attrs)
+        super(DatalistTextInput, self).__init__(attrs)
         self.choices = list(choices)
 
     def render(self, name, value, attrs={}, choices=()):
         attrs['list'] = 'id_%s_list' % name
-        output = [super(DataListInput, self).render(name, value, attrs)]
+        output = [super(DatalistTextInput, self).render(name, value, attrs)]
         options = self.render_options(name, choices)
         if options:
             output.append(options)
