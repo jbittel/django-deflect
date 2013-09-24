@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import base32_crockford
 
+from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -88,6 +89,8 @@ class ShortURL(models.Model):
                       'utm_campaign': self.campaign.lower(),
                       'utm_content': self.content.lower(),
                       'utm_medium': self.medium.lower()}
+        if getattr(settings, 'DEFLECT_NOOVERRIDE', False):
+            utm_params['utm_nooverride'] = '1'
         return add_query_params(self.long_url, utm_params)
     get_tracking_url.short_description = 'tracking URL'
 
