@@ -68,7 +68,7 @@ class ShortURLAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('long_url', 'short_url', 'get_tracking_url')}),
                  ('Google', {'fields': ('campaign', 'medium', 'content')}),
                  ('Additional Info', {'fields': ('description', 'qr_code')}),
-                 ('Short URL Usage', {'classes': ('collapse grp-collapse grp-closed'),
+                 ('Short URL Usage', {'classes': ('collapse', 'grp-collapse', 'grp-closed'),
                                       'fields': ('hits', 'created', 'last_used')}))
 
     def changelist_view(self, request, extra_context=None):
