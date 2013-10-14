@@ -30,10 +30,11 @@ class ShortURLManager(models.Manager):
 
     def get_unique_list(self, field):
         """
-        Get a list of unique values from a specified field name.
+        Get a list of non-blank, unique values from a specified
+        field.
         """
-        exclude_fields = {'%s__exact' % field: ''}
-        return self.exclude(**exclude_fields).values_list(field, flat=True).distinct()
+        blank = {'%s__exact' % field: ''}
+        return self.exclude(**blank).values_list(field, flat=True).distinct()
 
 
 @python_2_unicode_compatible

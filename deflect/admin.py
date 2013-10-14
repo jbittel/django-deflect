@@ -88,8 +88,8 @@ class ShortURLAdmin(admin.ModelAdmin):
         Users should only be able to modify ``ShortURL``s they own,
         except for superusers.
         """
-        has_class_permission = super(ShortURLAdmin, self).has_change_permission(request, obj)
-        if not has_class_permission:
+        has_perm = super(ShortURLAdmin, self).has_change_permission(request, obj)
+        if not has_perm:
             return False
         if obj is not None and not request.user.is_superuser and request.user.id != obj.creator.id:
             return False
@@ -100,8 +100,8 @@ class ShortURLAdmin(admin.ModelAdmin):
         Users should only be able to delete ``ShortURL``s they own,
         except for superusers.
         """
-        has_class_permission = super(ShortURLAdmin, self).has_delete_permission(request, obj)
-        if not has_class_permission:
+        has_perm = super(ShortURLAdmin, self).has_delete_permission(request, obj)
+        if not has_perm:
             return False
         if obj is not None and not request.user.is_superuser and request.user.id != obj.creator.id:
             return False
