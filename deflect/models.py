@@ -104,10 +104,10 @@ class ShortURL(models.Model):
         Return the complete short URL for the current redirect. If
         ``alias`` is ``True``, use the URL alias when available.
         """
-        url_base = 'http://%s' % Site.objects.get_current().domain
-        if not alias:
-            return url_base + self.get_absolute_url()
-        return url_base + self.get_alias_url()
+        base = 'http://%s' % Site.objects.get_current().domain
+        if alias:
+            return base + self.get_alias_url()
+        return base + self.get_absolute_url()
     short_url.short_description = 'short URL'
 
     def qr_code(self):
