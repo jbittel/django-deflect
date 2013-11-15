@@ -1,16 +1,8 @@
 #!/usr/bin/env python
 
 from distutils.core import setup
-import os
 
 from deflect import __version__ as version
-
-
-def read_file(filename):
-    """
-    Utility function to read a provided filename.
-    """
-    return open(os.path.join(os.path.dirname(__file__), filename)).read()
 
 
 packages = [
@@ -22,11 +14,14 @@ package_data = {
     '': ['LICENSE', 'README.rst'],
 }
 
+with open('README.rst') as f:
+    readme = f.read()
+
 setup(
     name='django-deflect',
     version=version,
     description='A Django short URL redirection application',
-    long_description=read_file('README.rst'),
+    long_description=readme,
     author='Jason Bittel',
     author_email='jason.bittel@gmail.com',
     url='https://github.com/jbittel/django-deflect',
