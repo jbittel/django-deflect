@@ -1,7 +1,5 @@
 from __future__ import unicode_literals
 
-import base32_crockford
-
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
@@ -10,12 +8,10 @@ from django.db.models import F
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
-try:
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-except ImportError:  # Django version < 1.5
-    from django.contrib.auth.models import User
 
+import base32_crockford
+
+from .compat import user_model
 from .utils import add_query_params
 from .utils import get_qr_code_img
 
@@ -49,7 +45,7 @@ class ShortURL(models.Model):
     content = models.CharField(_('content'), max_length=64, blank=True,
                                help_text=_('Used to differentiate similar content, or links within the same ad'))
     created = models.DateTimeField(_('created'), editable=False)
-    creator = models.ForeignKey(User, verbose_name=_('creator'), editable=False)
+    creator = models.ForeignKey(user_model, verbose_name=_('creator'), editable=False)
     description = models.TextField(_('description'), blank=True)
     hits = models.IntegerField(_('hits'), default=0, editable=False)
     last_used = models.DateTimeField(_('last used'), editable=False, blank=True, null=True)

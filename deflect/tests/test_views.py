@@ -3,14 +3,10 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-try:
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-except ImportError:  # Django version < 1.5
-    from django.contrib.auth.models import User
 
 import base32_crockford
 
+from ..compat import get_user_model
 from ..models import ShortURL
 from ..models import ShortURLAlias
 
@@ -45,7 +41,8 @@ class RedirectViewTests(DeflectTests):
         """
         Create a user and model instance to test against.
         """
-        self.user = User.objects.create_user('testing')
+        user = get_user_model()
+        self.user = user.objects.create_user('testing')
         self.shorturl = ShortURL.objects.create(long_url='http://www.example.com',
                                                 creator=self.user,
                                                 campaign='Example',
