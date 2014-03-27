@@ -10,6 +10,7 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
 import base32_crockford
+import requests
 
 from .compat import user_model
 from .utils import add_query_params
@@ -114,6 +115,14 @@ class ShortURL(models.Model):
         return get_qr_code_img(self.short_url(alias=False))
     qr_code.allow_tags = True
     qr_code.short_description = 'QR code'
+
+    def check_status(self):
+        """
+        Validate the destination URL, checking for both connection errors
+        and invalid HTTP status codes.
+        """
+        r = requests.head(self.long_url, allow_redirects=True, timeout=3.0)
+        r.raise_for_status()
 
 
 @python_2_unicode_compatible
