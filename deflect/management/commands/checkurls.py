@@ -14,16 +14,16 @@ class Command(NoArgsCommand):
             try:
                 url.check_status()
             except requests.exceptions.RequestException as e:
-                print self.error_text(url, e)
+                print self.bad_redirect_text(url, e)
 
-    def error_text(self, url, exception):
+    def bad_redirect_text(self, url, exception):
         """
+        Return informational text for a URL that raised an
+        exception.
         """
         return """
+Redirect {key} with target {target} returns {error}
 
-Bad redirect target: {key}
-{target} returns {error}
-
-Edit this URL: {edit}
+Edit this short URL: {edit}
 """.format(key=url.key, target=url.long_url, error=exception,
         edit=reverse('admin:deflect_shorturl_change', args=(url.id,)))
