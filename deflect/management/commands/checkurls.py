@@ -1,3 +1,4 @@
+from django.contrib.sites.models import Site
 from django.core.management.base import NoArgsCommand
 from django.core.urlresolvers import reverse
 
@@ -21,9 +22,10 @@ class Command(NoArgsCommand):
         Return informational text for a URL that raised an
         exception.
         """
+        base = 'http://%s' % Site.objects.get_current().domain
         return """
 Redirect {key} with target {target} returns {error}
 
 Edit this short URL: {edit}
 """.format(key=url.key, target=url.long_url, error=exception,
-        edit=reverse('admin:deflect_shorturl_change', args=(url.id,)))
+        edit=base + reverse('admin:deflect_shorturl_change', args=(url.id,)))
