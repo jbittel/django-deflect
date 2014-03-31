@@ -1,4 +1,5 @@
 from django.contrib.sites.models import Site
+from django.core.mail import mail_managers
 from django.core.management.base import NoArgsCommand
 from django.core.urlresolvers import reverse
 
@@ -11,11 +12,13 @@ class Command(NoArgsCommand):
     help = "Validate short URL redirect targets"
 
     def handle_noargs(self, *args, **options):
+        message = ''
         for url in ShortURL.objects.all():
             try:
                 url.check_status()
             except requests.exceptions.RequestException as e:
-                print self.bad_redirect_text(url, e)
+                message += self.bad_redirect_text(url, e)
+        mail_managers('go.corban.edu URL report', message)
 
     def bad_redirect_text(self, url, exception):
         """
