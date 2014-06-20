@@ -50,12 +50,12 @@ class ShortURLTests(TestCase):
         """
         self.assertEqual(self.shorturl.get_alias_url(), '/test')
 
-    def test_tracking_url(self):
+    def test_redirect_url(self):
         """
-        The tracking URL should be the long URL with all utm_
+        The redirect URL should be the long URL with all utm_
         parameters included.
         """
-        tracking_url = self.shorturl.get_tracking_url()
+        tracking_url = self.shorturl.get_redirect_url()
         self.assertIn('http://www.example.com', tracking_url)
         self.assertIn('utm_source=%s' % self.key, tracking_url)
         self.assertIn('utm_campaign=example', tracking_url)

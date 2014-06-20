@@ -33,4 +33,4 @@ def redirect(request, key):
     redirect = get_object_or_404(ShortURL, pk=key_id)
     ShortURL.objects.increment_hits(redirect.pk)
 
-    return HttpResponsePermanentRedirect(redirect.get_tracking_url())
+    return HttpResponsePermanentRedirect(redirect.get_redirect_url())
