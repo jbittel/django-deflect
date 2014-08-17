@@ -48,10 +48,13 @@ class RedirectViewTests(DeflectTests):
                                                 campaign='Example',
                                                 medium='Email',
                                                 content='Test')
+        self.shorturl2 = ShortURL.objects.create(long_url='http://www.example.com',
+                                                 creator=self.user,
+                                                 is_tracking=False)
         self.alias = ShortURLAlias.objects.create(redirect=self.shorturl,
                                                   alias='test')
         self.key = base32_crockford.encode(self.shorturl.pk)
-        self.invalid_key = base32_crockford.encode(self.shorturl.pk + 1)
+        self.invalid_key = base32_crockford.encode(self.shorturl.pk + 2)
 
         self.old_nooverride = getattr(settings, 'DEFLECT_NOOVERRIDE', False)
 
@@ -69,6 +72,16 @@ class RedirectViewTests(DeflectTests):
         self.assertInHeader(response, 'utm_campaign=example', 'location')
         self.assertInHeader(response, 'utm_medium=email', 'location')
         self.assertInHeader(response, 'utm_content=test', 'location')
+
+    def test_temporary_redirect(self):
+        """
+        A non-tracking redirect should return a temporary redirect to
+        the target URL.
+        """
+        key = base32_crockford.encode(self.shorturl2.pk)
+        response = self.client.get(reverse('deflect-redirect', args=[key]))
+        self.assertRedirectsNoFollow(response, 'http://www.example.com',
+                                     status_code=302)
 
     def test_alias(self):
         """

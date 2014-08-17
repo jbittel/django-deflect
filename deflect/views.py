@@ -5,6 +5,7 @@ import logging
 
 from django.http import Http404
 from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 
 from .models import ShortURL
@@ -17,8 +18,7 @@ logger = logging.getLogger(__name__)
 def redirect(request, key):
     """
     Given the short URL key, update the statistics and redirect the
-    user to the destination URL, including available Google Analytics
-    parameters.
+    user to the destination URL.
     """
     try:
         alias = ShortURLAlias.objects.get(alias=key.lower())
@@ -33,4 +33,7 @@ def redirect(request, key):
     redirect = get_object_or_404(ShortURL, pk=key_id)
     ShortURL.objects.increment_hits(redirect.pk)
 
-    return HttpResponsePermanentRedirect(redirect.get_redirect_url())
+    if redirect.is_tracking:
+        return HttpResponsePermanentRedirect(redirect.get_redirect_url())
+    else:
+        return HttpResponseRedirect(redirect.get_redirect_url())
