@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.test.utils import override_settings
 
 import base32_crockford
 
@@ -56,11 +56,6 @@ class RedirectViewTests(DeflectTests):
         self.key = base32_crockford.encode(self.shorturl.pk)
         self.invalid_key = base32_crockford.encode(self.shorturl.pk + 2)
 
-        self.old_nooverride = getattr(settings, 'DEFLECT_NOOVERRIDE', False)
-
-    def tearDown(self):
-        settings.DEFLECT_NOOVERRIDE = self.old_nooverride
-
     def test_redirect(self):
         """
         A valid key should return a permanent redirect to the target
@@ -109,11 +104,11 @@ class RedirectViewTests(DeflectTests):
         response = self.client.get(reverse('deflect-redirect', args=['u']))
         self.assertEqual(response.status_code, 404)
 
+    @override_settings(DEFLECT_NOOVERRIDE=True)
     def test_nooverride(self):
         """
         When ``DEFLECT_NOOVERRIDE`` is enabled, the appropriate
         utm parameter should be included in the redirect.
         """
-        settings.DEFLECT_NOOVERRIDE = True
         response = self.client.get(reverse('deflect-redirect', args=[self.key]))
         self.assertInHeader(response, 'utm_nooverride=1', 'location')
