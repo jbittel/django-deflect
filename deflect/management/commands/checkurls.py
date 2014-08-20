@@ -10,6 +10,7 @@ from deflect.models import ShortURL
 
 class Command(NoArgsCommand):
     help = "Validate short URL redirect targets"
+    domain = Site.objects.get_current().domain
 
     def handle_noargs(self, *args, **options):
         message = ''
@@ -17,17 +18,15 @@ class Command(NoArgsCommand):
             try:
                 url.check_status()
             except requests.exceptions.RequestException as e:
-                message += self.bad_redirect_text(url, e)
-        mail_managers('go.corban.edu URL report', message)
+                message += self.url_exception_text(url, e)
+        mail_managers('URL report for %s' % self.domain, message)
 
-    def bad_redirect_text(self, url, exception):
-        """
-        Return informational text for a URL that raised an
-        exception.
-        """
-        base = 'http://%s' % Site.objects.get_current().domain
+    def url_exception_text(self, url, exception):
+        """Return text block for a URL exception."""
+        base = 'http://%s' % self.domain
         return """
-Redirect {key} with target {target} returns {error}
+
+Redirect {key} with target {target} returned {error}
 
 Edit this short URL: {edit}
 """.format(key=url.key, target=url.long_url, error=exception,
