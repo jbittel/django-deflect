@@ -82,9 +82,8 @@ class ShortURL(models.Model):
 
     def get_redirect_url(self):
         """
-        Build the complete redirect URL by injecting Google campaign
-        parameters into the destination URL. If it is not a tracking
-        URL, return the destination URL unchanged.
+        Return the complete redirect URL. If it is a tracking URL, inject
+        available Google campaign parameters into the destination URL.
         """
         if not self.is_tracking:
             return self.long_url
@@ -123,8 +122,8 @@ class ShortURL(models.Model):
 
     def check_status(self):
         """
-        Validate the destination URL, checking for both connection errors
-        and invalid HTTP status codes.
+        Validate the destination URL, checking for connection errors
+        or invalid HTTP status codes.
         """
         r = requests.head(self.long_url, allow_redirects=True, timeout=3.0)
         r.raise_for_status()
