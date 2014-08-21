@@ -1,7 +1,7 @@
 from django.conf import settings
 
 
-__all__ = ['user_model', 'get_user_model']
+__all__ = ['user_model', 'get_user_model', 'gevent']
 
 
 # Django >= 1.5 uses AUTH_USER_MODEL to specify the currently active
@@ -22,3 +22,11 @@ try:
 except ImportError:  # pragma: no cover
     from django.contrib.auth.models import User
     get_user_model = lambda: User
+
+
+# gevent is optional, and allows for asynchronous requests. If it is
+# not present, synchronous requests will be sent.
+try:
+    import gevent
+except ImportError:
+    gevent = None
