@@ -16,7 +16,7 @@ class ShortURLAliasAdminForm(forms.ModelForm):
         Validate characters for the provided alias.
         """
         alias = self.cleaned_data.get('alias')
-        if bool(re.compile(r'[^a-zA-Z0-9-]').search(alias)):
+        if not bool(re.compile(r'^[a-zA-Z0-9-]+$').match(alias)):
             raise forms.ValidationError("Alias contains invalid characters")
         return alias
 
