@@ -1,21 +1,10 @@
 #!/usr/bin/env python
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import find_packages
+from setuptools import setup
 
 from deflect import __version__ as version
 
-
-packages = [
-    'deflect',
-    'deflect.tests',
-]
-
-package_data = {
-    '': ['LICENSE', 'README.rst'],
-}
 
 with open('README.rst') as f:
     readme = f.read()
@@ -25,14 +14,18 @@ setup(
     version=version,
     description='A Django short URL redirection application',
     long_description=readme,
+    license='BSD',
     author='Jason Bittel',
     author_email='jason.bittel@gmail.com',
     url='https://github.com/jbittel/django-deflect',
     download_url='https://github.com/jbittel/django-deflect/downloads',
-    package_dir={'deflect': 'deflect'},
-    packages=packages,
-    package_data=package_data,
-    license='BSD',
+    packages=find_packages(),
+    include_package_data=True,
+    install_requires=[
+        'base32-crockford',
+        'qrcode',
+        'requests',
+    ],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
@@ -46,9 +39,4 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     keywords=['django', 'url', 'short url', 'redirect', 'redirection'],
-    install_requires=[
-        'base32-crockford',
-        'qrcode',
-        'requests',
-    ],
 )
