@@ -1,12 +1,9 @@
 import base64
 from cStringIO import StringIO
-try:
-    from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
-except ImportError:  # pragma: no cover
-    from urllib import urlencode
-    from urlparse import parse_qsl, urlparse, urlunparse
 
 import qrcode
+
+from .compat import parse_qsl, urlencode, urlparse, urlunparse
 
 
 def add_query_params(url, params):

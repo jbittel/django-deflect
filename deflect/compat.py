@@ -1,9 +1,6 @@
 from django.conf import settings
 
 
-__all__ = ['user_model', 'get_user_model', 'gevent']
-
-
 # Django >= 1.5 uses AUTH_USER_MODEL to specify the currently active
 # User model. Previous versions of Django do not have this setting
 # and use the built-in User model.
@@ -30,3 +27,11 @@ try:
     import gevent
 except ImportError:
     gevent = None
+
+
+# Support both Python 2 and Python 3 locations for urllib imports.
+try:
+    from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
+except ImportError:  # pragma: no cover
+    from urllib import urlencode
+    from urlparse import parse_qsl, urlparse, urlunparse
