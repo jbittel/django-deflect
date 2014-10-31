@@ -65,11 +65,26 @@ class ShortURLAdmin(admin.ModelAdmin):
     readonly_fields = ('created', 'short_url', 'get_redirect_url', 'qr_code', 'hits', 'last_used')
     search_fields = ['long_url', 'campaign', 'shorturlalias__alias']
 
-    fieldsets = ((None, {'fields': ('long_url', 'short_url', 'get_redirect_url')}),
+    _change_fieldsets = ((None, {'fields': ('long_url', 'short_url', 'get_redirect_url')}),
                  ('Tracking', {'fields': ('is_tracking', 'campaign', 'medium', 'content')}),
                  ('Additional Info', {'fields': ('description', 'qr_code')}),
                  ('Short URL Usage', {'classes': ('collapse', 'grp-collapse', 'grp-closed'),
                                       'fields': ('hits', 'created', 'last_used')}))
+
+    _add_fieldsets = ((None, {'fields': ('long_url',)}),
+                 ('Tracking', {'fields': ('is_tracking', 'campaign', 'medium', 'content')}),
+                 ('Additional Info', {'fields': ('description',)}))
+
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return self.readonly_fields
+        return ()
+
+    def get_fieldsets(self, request, obj=None):
+        if obj:
+            return self._change_fieldsets
+        return self._add_fieldsets
 
     def changelist_view(self, request, extra_context=None):
         """
