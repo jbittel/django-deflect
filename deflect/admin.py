@@ -75,7 +75,6 @@ class ShortURLAdmin(admin.ModelAdmin):
                  ('Tracking', {'fields': ('is_tracking', 'campaign', 'medium', 'content')}),
                  ('Additional Info', {'fields': ('description',)}))
 
-
     def get_readonly_fields(self, request, obj=None):
         if obj:
             return self.readonly_fields
