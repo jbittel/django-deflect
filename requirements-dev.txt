@@ -1,0 +1,3 @@
+pytest-django
+requests
+base32-crockford
