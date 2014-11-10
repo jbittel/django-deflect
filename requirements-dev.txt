@@ -2,3 +2,4 @@ pytest-django
 requests
 base32-crockford
 flake8
+qrcode
