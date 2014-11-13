@@ -68,6 +68,16 @@ class RedirectViewTests(DeflectTests):
         self.assertInHeader(response, 'utm_medium=email', 'location')
         self.assertInHeader(response, 'utm_content=test', 'location')
 
+    def test_redirect_params(self):
+        """
+        A redirect should include any query parameters provided to the
+        short URL.
+        """
+        url = reverse('deflect-redirect', args=[self.key]) + '?test=param'
+        response = self.client.get(url)
+        self.assertRedirectsNoFollow(response, 'http://www.example.com')
+        self.assertInHeader(response, 'test=param', 'location')
+
     def test_temporary_redirect(self):
         """
         A non-tracking redirect should return a temporary redirect to

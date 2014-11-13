@@ -62,6 +62,15 @@ class ShortURLTests(TestCase):
         self.assertIn('utm_medium=email', tracking_url)
         self.assertIn('utm_content=test', tracking_url)
 
+    def test_redirect_query_params(self):
+        """
+        Any query parameters passed to the short URL should carry
+        through the redirect.
+        """
+        tracking_url = self.shorturl.get_redirect_url(params={'test': 'param'})
+        self.assertIn('http://www.example.com', tracking_url)
+        self.assertIn('test=param', tracking_url)
+
     def test_short_url(self):
         """
         The short URL should be equal to the model's complete URL,
