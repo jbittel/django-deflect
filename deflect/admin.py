@@ -62,10 +62,10 @@ class ShortURLAdmin(admin.ModelAdmin):
     list_filter = ('campaign', 'medium')
     _list_filter = list_filter
     ordering = ['-created']
-    readonly_fields = ('created', 'short_url', 'get_redirect_url', 'qr_code', 'hits', 'last_used')
+    readonly_fields = ('created', 'short_url', 'target_url', 'qr_code', 'hits', 'last_used')
     search_fields = ['long_url', 'campaign', 'shorturlalias__alias']
 
-    _change_fieldsets = ((None, {'fields': ('long_url', 'short_url', 'get_redirect_url')}),
+    _change_fieldsets = ((None, {'fields': ('long_url', 'short_url', 'target_url')}),
                  ('Tracking', {'fields': ('is_tracking', 'campaign', 'medium', 'content')}),
                  ('Additional Info', {'fields': ('description', 'qr_code')}),
                  ('Short URL Usage', {'classes': ('collapse', 'grp-collapse', 'grp-closed'),

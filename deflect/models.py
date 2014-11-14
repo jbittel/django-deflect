@@ -80,10 +80,11 @@ class ShortURL(models.Model):
         except ShortURLAlias.DoesNotExist:
             return self.get_absolute_url()
 
-    def get_redirect_url(self, params={}):
+    def target_url(self, params={}):
         """
-        Return the complete redirect URL. If it is a tracking URL, inject
-        available Google campaign parameters into the destination URL.
+        Return the complete redirect URL, including any provided query
+        parameters. If it is a tracking URL, inject available Google
+        campaign parameters into the destination URL.
         """
         if self.is_tracking:
             params['utm_source'] = self.key
@@ -93,7 +94,7 @@ class ShortURL(models.Model):
             if getattr(settings, 'DEFLECT_NOOVERRIDE', False):
                 params['utm_nooverride'] = '1'
         return add_query_params(self.long_url, params)
-    get_redirect_url.short_description = 'redirect URL'
+    target_url.short_description = 'target URL'
 
     @property
     def key(self):

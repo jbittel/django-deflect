@@ -55,7 +55,7 @@ class ShortURLTests(TestCase):
         The redirect URL should be the long URL with all utm_
         parameters included.
         """
-        tracking_url = self.shorturl.get_redirect_url()
+        tracking_url = self.shorturl.target_url()
         self.assertIn('http://www.example.com', tracking_url)
         self.assertIn('utm_source=%s' % self.key, tracking_url)
         self.assertIn('utm_campaign=example', tracking_url)
@@ -67,7 +67,7 @@ class ShortURLTests(TestCase):
         Any query parameters passed to the short URL should carry
         through the redirect.
         """
-        tracking_url = self.shorturl.get_redirect_url(params={'test': 'param'})
+        tracking_url = self.shorturl.target_url(params={'test': 'param'})
         self.assertIn('http://www.example.com', tracking_url)
         self.assertIn('test=param', tracking_url)
 

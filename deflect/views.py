@@ -35,6 +35,6 @@ def redirect(request, key):
     params = request.GET.copy()
 
     if redirect.is_tracking:
-        return HttpResponsePermanentRedirect(redirect.get_redirect_url(params=params))
+        return HttpResponsePermanentRedirect(redirect.target_url(params=params))
     else:
-        return HttpResponseRedirect(redirect.get_redirect_url(params=params))
+        return HttpResponseRedirect(redirect.target_url(params=params))
