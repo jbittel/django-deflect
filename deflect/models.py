@@ -125,7 +125,8 @@ class ShortURL(models.Model):
         Validate the destination URL, checking for connection errors
         or invalid HTTP status codes.
         """
-        r = requests.head(self.long_url, allow_redirects=True, timeout=3.0)
+        timeout = getattr(settings, 'DEFLECT_REQUESTS_TIMEOUT', 3.0)
+        r = requests.head(self.long_url, allow_redirects=True, timeout=timeout)
         r.raise_for_status()
 
 

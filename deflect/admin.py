@@ -1,6 +1,7 @@
 import re
 
 from django import forms
+from django.conf import settings
 from django.contrib import admin
 
 import requests
@@ -37,8 +38,9 @@ class ShortURLAdminForm(forms.ModelForm):
         Validate connectivity to the provided target URL.
         """
         url = self.cleaned_data.get('long_url')
+        timeout = getattr(settings, 'DEFLECT_REQUESTS_TIMEOUT', 3.0)
         try:
-            r = requests.head(url, allow_redirects=True, timeout=3.0)
+            r = requests.head(url, allow_redirects=True, timeout=timeout)
         except requests.exceptions.ConnectionError:
             raise forms.ValidationError("Error connecting to URL")
         except requests.exceptions.SSLError:
