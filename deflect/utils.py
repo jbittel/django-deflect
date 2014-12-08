@@ -3,7 +3,10 @@ from cStringIO import StringIO
 
 import qrcode
 
-from .compat import parse_qsl, urlencode, urlparse, urlunparse
+from .compat import parse_qsl
+from .compat import urlencode
+from .compat import urlparse
+from .compat import urlunparse
 
 
 def add_query_params(url, params):
