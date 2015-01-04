@@ -78,11 +78,20 @@ class ShortURLAdmin(admin.ModelAdmin):
                  ('Additional Info', {'fields': ('description',)}))
 
     def get_readonly_fields(self, request, obj=None):
+        """
+        If a ``ShortURL`` has already been created, then display the
+        configured readonly fields. Otherwise, hide them as they
+        will not contain data in that context.
+        """
         if obj:
             return self.readonly_fields
         return ()
 
     def get_fieldsets(self, request, obj=None):
+        """
+        Display the appropriate fieldsets depending on whether a
+        ``ShortURL`` is being added or changed.
+        """
         if obj:
             return self._change_fieldsets
         return self._add_fieldsets
