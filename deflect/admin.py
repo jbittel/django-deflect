@@ -59,7 +59,7 @@ class ShortURLAdminForm(forms.ModelForm):
 class ShortURLAdmin(admin.ModelAdmin):
     form = ShortURLAdminForm
     inlines = [ShortURLAliasInline]
-    list_display = ('long_url', 'short_url', 'created', 'last_used', 'campaign', 'medium')
+    list_display = ('long_url', 'short_url', 'created', 'hits', 'last_used', 'campaign', 'medium')
     _list_display = list_display
     list_filter = ('campaign', 'medium')
     _list_filter = list_filter
