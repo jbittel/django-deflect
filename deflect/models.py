@@ -126,7 +126,7 @@ class ShortURL(models.Model):
         or invalid HTTP status codes.
         """
         timeout = getattr(settings, 'DEFLECT_REQUESTS_TIMEOUT', 3.0)
-        r = requests.head(self.long_url, allow_redirects=True, timeout=timeout)
+        r = requests.get(self.long_url, allow_redirects=True, timeout=timeout)
         r.raise_for_status()
 
 

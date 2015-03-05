@@ -40,7 +40,7 @@ class ShortURLAdminForm(forms.ModelForm):
         url = self.cleaned_data.get('long_url')
         timeout = getattr(settings, 'DEFLECT_REQUESTS_TIMEOUT', 3.0)
         try:
-            r = requests.head(url, allow_redirects=True, timeout=timeout)
+            r = requests.get(url, allow_redirects=True, timeout=timeout)
         except requests.exceptions.ConnectionError:
             raise forms.ValidationError("Error connecting to URL")
         except requests.exceptions.SSLError:
