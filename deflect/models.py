@@ -60,6 +60,9 @@ class ShortURL(models.Model):
     objects = ShortURLManager()
 
     class Meta:
+        permissions = (
+            ('list_all', 'Can list all short URLs'),
+        )
         verbose_name = _('short URL')
         verbose_name_plural = _('short URLs')
 

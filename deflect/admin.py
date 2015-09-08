@@ -100,9 +100,10 @@ class ShortURLAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
         """
-        Inject additional filtering options for superusers.
+        Inject additional filtering options for users with
+        appropriate permissions.
         """
-        if request.user.is_superuser:
+        if request.user.has_perm('deflect.list_all'):
             self.list_filter = self._list_filter + ('creator__username',)
             self.list_display = self._list_display + ('creator',)
         else:
@@ -113,34 +114,34 @@ class ShortURLAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         """
         Users should only be able to modify ``ShortURL``s they own,
-        except for superusers.
+        except for privileged users.
         """
         has_perm = super(ShortURLAdmin, self).has_change_permission(request, obj)
         if not has_perm:
             return False
-        if obj is not None and not request.user.is_superuser and request.user.id != obj.creator.id:
+        if obj is not None and not request.user.has_perm('deflect.list_all') and request.user.id != obj.creator.id:
             return False
         return True
 
     def has_delete_permission(self, request, obj=None):
         """
         Users should only be able to delete ``ShortURL``s they own,
-        except for superusers.
+        except for privileged users.
         """
         has_perm = super(ShortURLAdmin, self).has_delete_permission(request, obj)
         if not has_perm:
             return False
-        if obj is not None and not request.user.is_superuser and request.user.id != obj.creator.id:
+        if obj is not None and not request.user.has_perm('deflect.list_all') and request.user.id != obj.creator.id:
             return False
         return True
 
     def queryset(self, request):
         """
-        Superusers can view all ``ShortURL``s. Non-superusers should
-        only be able to view their own.
+        Users should only be able to view their own ``ShortURL``s,
+        except for privileged users.
         """
         qs = super(ShortURLAdmin, self).queryset(request)
-        if request.user.is_superuser:
+        if request.user.has_perm('deflect.list_all'):
             return qs
         return qs.filter(creator=request.user)
 
