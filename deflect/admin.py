@@ -69,15 +69,18 @@ class ShortURLAdmin(admin.ModelAdmin):
     readonly_fields = ('created', 'short_url', 'target_url', 'qr_code', 'hits', 'last_used')
     search_fields = ['long_url', 'campaign', 'shorturlalias__alias']
 
-    _change_fieldsets = ((None, {'fields': ('long_url', 'short_url', 'target_url')}),
-                 ('Tracking', {'fields': ('is_tracking', 'campaign', 'medium', 'content')}),
-                 ('Additional Info', {'fields': ('description', 'qr_code')}),
-                 ('Short URL Usage', {'classes': ('collapse', 'grp-collapse', 'grp-closed'),
-                                      'fields': ('hits', 'created', 'last_used')}))
+    _change_fieldsets = (
+        (None, {'fields': ('long_url', 'short_url', 'target_url')}),
+        ('Tracking', {'fields': ('is_tracking', 'campaign', 'medium', 'content')}),
+        ('Additional Info', {'fields': ('description', 'qr_code')}),
+        ('Short URL Usage', {'classes': ('collapse',), 'fields': ('hits', 'created', 'last_used')})
+    )
 
-    _add_fieldsets = ((None, {'fields': ('long_url',)}),
-                 ('Tracking', {'fields': ('is_tracking', 'campaign', 'medium', 'content')}),
-                 ('Additional Info', {'fields': ('description',)}))
+    _add_fieldsets = (
+        (None, {'fields': ('long_url',)}),
+        ('Tracking', {'fields': ('is_tracking', 'campaign', 'medium', 'content')}),
+        ('Additional Info', {'fields': ('description',)})
+    )
 
     def get_readonly_fields(self, request, obj=None):
         """
