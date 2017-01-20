@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
 
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 import base32_crockford
 
-from ..compat import get_user_model
 from ..models import ShortURL
 from ..models import ShortURLAlias
 

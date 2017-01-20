@@ -1,12 +1,12 @@
 from __future__ import unicode_literals
 
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.utils import override_settings
 
 import base32_crockford
 
-from ..compat import get_user_model
 from ..models import ShortURL
 from ..models import ShortURLAlias
 

@@ -12,7 +12,6 @@ from django.utils.translation import ugettext_lazy as _
 import base32_crockford
 import requests
 
-from .compat import user_model
 from .utils import add_query_params
 from .utils import get_qr_code_img
 
@@ -46,7 +45,7 @@ class ShortURL(models.Model):
     content = models.CharField(_('content'), max_length=64, blank=True,
                                help_text=_('Used to differentiate similar content, or links within the same ad'))
     created = models.DateTimeField(_('created'), editable=False)
-    creator = models.ForeignKey(user_model, verbose_name=_('creator'), editable=False)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('creator'), editable=False)
     description = models.TextField(_('description'), blank=True)
     hits = models.IntegerField(_('hits'), default=0, editable=False)
     last_used = models.DateTimeField(_('last used'), editable=False, blank=True, null=True)
