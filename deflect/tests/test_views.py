@@ -61,7 +61,7 @@ class RedirectViewTests(DeflectTests):
         A valid key should return a permanent redirect to the target
         URL with all parameters included.
         """
-        response = self.client.get(reverse('deflect-redirect', args=[self.key]))
+        response = self.client.get(reverse('deflect:redirect', args=[self.key]))
         self.assertRedirectsNoFollow(response, 'http://www.example.com')
         self.assertInHeader(response, 'utm_source=' + self.key, 'location')
         self.assertInHeader(response, 'utm_campaign=example', 'location')
@@ -73,7 +73,7 @@ class RedirectViewTests(DeflectTests):
         A redirect should include any query parameters provided to the
         short URL.
         """
-        url = reverse('deflect-redirect', args=[self.key]) + '?test=param'
+        url = reverse('deflect:redirect', args=[self.key]) + '?test=param'
         response = self.client.get(url)
         self.assertRedirectsNoFollow(response, 'http://www.example.com')
         self.assertInHeader(response, 'test=param', 'location')
@@ -84,7 +84,7 @@ class RedirectViewTests(DeflectTests):
         the target URL.
         """
         key = base32_crockford.encode(self.shorturl2.pk)
-        response = self.client.get(reverse('deflect-redirect', args=[key]))
+        response = self.client.get(reverse('deflect:redirect', args=[key]))
         self.assertRedirectsNoFollow(response, 'http://www.example.com',
                                      status_code=302)
 
@@ -93,7 +93,7 @@ class RedirectViewTests(DeflectTests):
         A valid alias should return a permanent redirect to the target
         URL with all parameters included.
         """
-        response = self.client.get(reverse('deflect-redirect', args=['test']))
+        response = self.client.get(reverse('deflect:redirect', args=['test']))
         self.assertRedirectsNoFollow(response, 'http://www.example.com')
         self.assertInHeader(response, 'utm_source=' + self.key, 'location')
         self.assertInHeader(response, 'utm_campaign=example', 'location')
@@ -104,14 +104,14 @@ class RedirectViewTests(DeflectTests):
         """
         An invalid key should return a 404 status.
         """
-        response = self.client.get(reverse('deflect-redirect', args=[self.invalid_key]))
+        response = self.client.get(reverse('deflect:redirect', args=[self.invalid_key]))
         self.assertEqual(response.status_code, 404)
 
     def test_invalid_decode(self):
         """
         An invalid decoding error should return a 404 status.
         """
-        response = self.client.get(reverse('deflect-redirect', args=['u']))
+        response = self.client.get(reverse('deflect:redirect', args=['u']))
         self.assertEqual(response.status_code, 404)
 
     @override_settings(DEFLECT_NOOVERRIDE=True)
@@ -120,5 +120,5 @@ class RedirectViewTests(DeflectTests):
         When ``DEFLECT_NOOVERRIDE`` is enabled, the appropriate
         utm parameter should be included in the redirect.
         """
-        response = self.client.get(reverse('deflect-redirect', args=[self.key]))
+        response = self.client.get(reverse('deflect:redirect', args=[self.key]))
         self.assertInHeader(response, 'utm_nooverride=1', 'location')

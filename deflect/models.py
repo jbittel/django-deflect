@@ -74,11 +74,11 @@ class ShortURL(models.Model):
         super(ShortURL, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('deflect-redirect', args=[self.key])
+        return reverse('deflect:redirect', args=[self.key])
 
     def get_alias_url(self):
         try:
-            return reverse('deflect-redirect', args=[self.shorturlalias.alias])
+            return reverse('deflect:redirect', args=[self.shorturlalias.alias])
         except ShortURLAlias.DoesNotExist:
             return self.get_absolute_url()
 
