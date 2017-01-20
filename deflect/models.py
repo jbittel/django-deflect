@@ -40,21 +40,57 @@ class ShortURL(models.Model):
     URL and the full destination URL. Several additional values are
     stored with related data and usage statistics.
     """
-    campaign = models.CharField(_('campaign'), max_length=64, blank=True,
-                                help_text=_('The individual campaign name, slogan, promo code, etc. for a product'))
-    content = models.CharField(_('content'), max_length=64, blank=True,
-                               help_text=_('Used to differentiate similar content, or links within the same ad'))
-    created = models.DateTimeField(_('created'), editable=False)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('creator'), editable=False)
-    description = models.TextField(_('description'), blank=True)
-    hits = models.IntegerField(_('hits'), default=0, editable=False)
-    last_used = models.DateTimeField(_('last used'), editable=False, blank=True, null=True)
-    long_url = models.URLField(_('long URL'),
-                               help_text=_('The target URL to which the short URL redirects'))
-    medium = models.CharField(_('medium'), max_length=64, blank=True,
-                              help_text=_('The advertising or marketing medium, e.g.: postcard, banner, email newsletter'))
-    is_tracking = models.BooleanField(_('is this a tracking URL?'), default=True,
-                                      help_text=_('Determine whether or not to redirect with tracking parameters'))
+    campaign = models.CharField(
+        _('campaign'),
+        max_length=64,
+        blank=True,
+        help_text=_('The individual campaign name, slogan, promo code, etc. for a product'),
+    )
+    content = models.CharField(
+        _('content'),
+        max_length=64,
+        blank=True,
+        help_text=_('Used to differentiate similar content, or links within the same ad'),
+    )
+    created = models.DateTimeField(
+        _('created'),
+        editable=False,
+    )
+    creator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_('creator'),
+        editable=False,
+    )
+    description = models.TextField(
+        _('description'),
+        blank=True,
+    )
+    hits = models.IntegerField(
+        _('hits'),
+        default=0,
+        editable=False,
+    )
+    is_tracking = models.BooleanField(
+        _('is this a tracking URL?'),
+        default=True,
+        help_text=_('Determine whether or not to redirect with tracking parameters'),
+    )
+    last_used = models.DateTimeField(
+        _('last used'),
+        editable=False,
+        blank=True,
+        null=True,
+    )
+    long_url = models.URLField(
+        _('long URL'),
+        help_text=_('The target URL to which the short URL redirects'),
+    )
+    medium = models.CharField(
+        _('medium'),
+        max_length=64,
+        blank=True,
+        help_text=_('The advertising or marketing medium, e.g.: postcard, banner, email newsletter'),
+    )
 
     objects = ShortURLManager()
 
@@ -129,8 +165,7 @@ class ShortURL(models.Model):
         """
         headers = getattr(settings, 'DEFLECT_REQUESTS_HEADERS', None)
         timeout = getattr(settings, 'DEFLECT_REQUESTS_TIMEOUT', 3.0)
-        r = requests.get(self.long_url, headers=headers, timeout=timeout,
-                         allow_redirects=True)
+        r = requests.get(self.long_url, headers=headers, timeout=timeout, allow_redirects=True)
         r.raise_for_status()
 
 
@@ -141,8 +176,12 @@ class ShortURLAlias(models.Model):
     that can be used in place of the generated key.
     """
     redirect = models.OneToOneField(ShortURL)
-    alias = models.CharField(_('alias'), max_length=16, unique=True,
-                             help_text=_('A custom alias for the short URL'))
+    alias = models.CharField(
+        _('alias'),
+        max_length=16,
+        unique=True,
+        help_text=_('A custom alias for the short URL'),
+    )
 
     class Meta:
         verbose_name = _('alias')
